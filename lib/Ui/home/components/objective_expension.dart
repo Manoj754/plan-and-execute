@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:plan_execute/constants/colors.dart';
-import 'package:plan_execute/data/models/member_model.dart';
-
-import 'dart:math' as math;
-
 import 'package:plan_execute/data/models/objective_model.dart';
 
 double heightFactor = .05;
@@ -19,7 +15,6 @@ class _ObjectivesExpansionState extends State<ObjectivesExpansion> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final size = MediaQuery.of(context).size;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8),
       child: Card(

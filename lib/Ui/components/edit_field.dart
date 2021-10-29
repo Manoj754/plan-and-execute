@@ -4,8 +4,10 @@ import 'package:plan_execute/constants/colors.dart';
 class EditField extends StatelessWidget {
   final IconData? leading;
   final String? hint;
+  final double? radius;
   final TextEditingController? controller;
-  const EditField({this.leading, this.controller, this.hint, Key? key})
+  const EditField(
+      {this.leading, this.controller, this.hint, Key? key, this.radius})
       : super(key: key);
 
   @override
@@ -14,21 +16,24 @@ class EditField extends StatelessWidget {
     return TextFormField(
       controller: controller,
       cursorColor: primaryColor,
+      style: theme.textTheme.subtitle2,
       decoration: InputDecoration(
         filled: true,
         fillColor: Colors.white,
         prefixIconConstraints: BoxConstraints(minHeight: 60, minWidth: 60),
-        prefixIcon: Icon(
-          leading,
-        ),
+        prefixIcon: leading == null
+            ? null
+            : Icon(
+                leading,
+              ),
         hintText: hint,
         hintStyle: theme.textTheme.subtitle1,
         focusColor: primaryColor,
         focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(100),
+            borderRadius: BorderRadius.circular(radius ?? 100),
             borderSide: BorderSide(color: primaryColor, width: 1.5)),
         enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(100),
+            borderRadius: BorderRadius.circular(radius ?? 100),
             borderSide: BorderSide(color: Colors.white)),
       ),
     );

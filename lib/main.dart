@@ -1,9 +1,7 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:plan_execute/Ui/new_file.dart';
-import 'package:plan_execute/Ui/signIn_page.dart';
+import 'package:plan_execute/Ui/home/objective/create_objective.dart';
 import 'package:plan_execute/constants/colors.dart';
 import 'package:plan_execute/routes/routes.dart';
 
@@ -28,7 +26,9 @@ class MyApp extends StatelessWidget {
           primarySwatch: MaterialColor(0xff3610ef, primaryColors),
           accentColor: primaryColor,
           dividerColor: Colors.transparent,
+          iconTheme: IconThemeData(color: primaryColor.withOpacity(.5)),
           scaffoldBackgroundColor: scafolBackgroudColor,
+          dialogBackgroundColor: scafolBackgroudColor,
           textTheme: TextTheme(
             bodyText1: TextStyle(fontWeight: FontWeight.w700, fontSize: 30),
             bodyText2: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
@@ -55,7 +55,11 @@ class MyApp extends StatelessWidget {
             subtitle2: TextStyle(
                 fontWeight: FontWeight.w500,
                 fontSize: 14,
-                color: darkTextColor.withOpacity(.6)),
+                color: darkTextColor.withOpacity(.75)),
+          ),
+          tabBarTheme: TabBarTheme(
+            unselectedLabelColor: Colors.grey,
+            labelColor: primaryColor,
           ),
           appBarTheme: AppBarTheme(
               backgroundColor: transparentColor,
@@ -74,8 +78,8 @@ class MyApp extends StatelessWidget {
       //   // is not restarted.
       //   primarySwatch: Colors.blue,
       // ),
-      initialRoute: PageRoutes.signInRoute,
-      // home: CreateNewTeamPage(),
+      // initialRoute: PageRoutes.signInRoute,
+      home: CreateObjective(),
       onGenerateRoute: PageRoutes.routeGenerator,
     );
   }

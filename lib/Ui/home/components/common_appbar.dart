@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:plan_execute/Ui/home/home_screen.dart';
-import 'package:plan_execute/data/models/team_model.dart';
 
 final url =
     "https://images.unsplash.com/photo-1634921553571-376a18dde21a?ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw0fHx8ZW58MHx8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60";
