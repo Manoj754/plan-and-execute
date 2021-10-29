@@ -57,6 +57,9 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    controller.addListener(() {
+      setState(() {});
+    });
   }
 
   @override
@@ -69,7 +72,9 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: PreferredSize(
-        child: CommonAppBar(),
+        child: CommonAppBar(
+          pageNumber: _bottomNavController.val,
+        ),
         preferredSize: Size(0, 50),
       ),
       // body: DrawerUserController(
@@ -92,8 +97,13 @@ class _HomePageState extends State<HomePage> {
                 print(i);
                 _bottomNavController.value = i;
               },
+              physics: NeverScrollableScrollPhysics(),
               controller: controller,
-              children: [ const DashBoard(), const ObjectivePage(), const ProfilePage()],
+              children: [
+                const DashBoard(),
+                const ObjectivePage(),
+                const ProfilePage()
+              ],
             )),
             // Expanded(
             //   child: Center(

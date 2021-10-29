@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:plan_execute/Ui/home/components/invite_member_bottom_shit.dart';
+import 'package:plan_execute/Ui/home/components/invite_member_bottom_sheet.dart';
 import 'package:plan_execute/constants/colors.dart';
 import 'package:plan_execute/data/models/team_model.dart';
 import 'package:plan_execute/routes/routes.dart';
