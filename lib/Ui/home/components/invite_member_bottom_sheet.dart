@@ -22,6 +22,7 @@ class InviteMembetBottomShit extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context).textTheme;
     return Card(
+      
       margin: EdgeInsets.all(0),
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
