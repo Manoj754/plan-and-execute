@@ -5,6 +5,7 @@ import 'package:plan_execute/Ui/components/date_picker.dart';
 import 'package:plan_execute/Ui/components/drop_down_button.dart';
 import 'package:plan_execute/Ui/components/edit_field.dart';
 import 'package:plan_execute/Ui/home/objective/rule_widget.dart';
+import 'package:plan_execute/Ui/signIn_page.dart';
 import 'package:plan_execute/Ui/utils.dart';
 import 'package:plan_execute/constants/colors.dart';
 import 'package:plan_execute/data/models/rule_model.dart';
@@ -31,62 +32,71 @@ class _CreateObjectiveState extends State<CreateObjective>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: [
-            Container(
-              height: 50,
-              child: TabBar(
-                controller: controller,
-                tabs: [
-                  Tab(
-                    text: "Primary",
-                  ),
-                  Tab(
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text("key"),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        Container(
-                          decoration: BoxDecoration(
-                              color: primaryColor,
-                              borderRadius: BorderRadius.circular(100)),
-                          child: Padding(
-                            padding: const EdgeInsets.all(4.0),
-                            child: Text(
-                              "3",
-                              style: TextStyle(color: Colors.white),
+    return Container(
+      decoration: backGroundDecoration,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(
+            "Create Objective",
+            style: Theme.of(context).textTheme.headline1,
+          ),
+        ),
+        body: SafeArea(
+          child: Column(
+            children: [
+              Container(
+                height: 50,
+                child: TabBar(
+                  controller: controller,
+                  tabs: [
+                    Tab(
+                      text: "Primary",
+                    ),
+                    Tab(
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text("Key Rules"),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          Container(
+                            decoration: BoxDecoration(
+                                color: primaryColor,
+                                borderRadius: BorderRadius.circular(100)),
+                            child: Padding(
+                              padding: const EdgeInsets.all(4.0),
+                              child: Text(
+                                "3",
+                                style: TextStyle(color: Colors.white),
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
+                      // text: "Key Rule ${controller.index.toString()}",
                     ),
-                    // text: "Key Rule ${controller.index.toString()}",
-                  ),
-                ],
-                onTap: (int) {
-                  print(int);
+                  ],
+                  onTap: (int) {
+                    print(int);
+                  },
+                ),
+              ),
+              Expanded(
+                child: TabBarView(
+                    controller: controller,
+                    children: [PrimaryDetails(), KeyRulesScreen()]),
+              ),
+              CommonButton(
+                label: "Save",
+                isExpanded: true,
+                radius: 0,
+                onTap: () {
+                  Navigator.maybePop(context);
                 },
               ),
-            ),
-            Expanded(
-              child: TabBarView(
-                  controller: controller,
-                  children: [PrimaryDetails(), KeyRulesScreen()]),
-            ),
-            CommonButton(
-              label: "Save",
-              isExpanded: true,
-              radius: 0,
-              onTap: () {
-                Navigator.maybePop(context);
-              },
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -143,107 +153,109 @@ class _PrimaryDetailsState extends State<PrimaryDetails> {
     final lableStyle = theme.subtitle2!.copyWith(fontSize: 16);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 18),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(
-            height: 10,
-          ),
-          Text(
-            "Objective type",
-            style: lableStyle,
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          CustomDropDownButton(
-            currentValue: currentObjectType,
-            items: [
-              DropdownMenuItem(
-                child: Text("Team"),
-                value: 1,
-              ),
-              DropdownMenuItem(
-                child: Text("Individual"),
-                value: 2,
-              ),
-            ],
-            radius: 10,
-            onChanged: (v) {
-              currentObjectType = v;
-              setState(() {});
-            },
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          Text(
-            "Objective type",
-            style: lableStyle,
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          CustomDropDownButton(
-            currentValue: currentAssignedMembder,
-            items: [
-              DropdownMenuItem(
-                child: Text("Admin"),
-                value: 1,
-              ),
-              DropdownMenuItem(
-                child: Text("developer"),
-                value: 2,
-              ),
-            ],
-            radius: 10,
-            onChanged: (v) {
-              currentAssignedMembder = v;
-              setState(() {});
-            },
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          Text(
-            "Name",
-            style: lableStyle,
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          EditField(
-            hint: "Name",
-            radius: 10,
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          Text(
-            "Description",
-            style: lableStyle,
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          EditField(
-            hint: "Description",
-            radius: 10,
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          Text(
-            "Due Date",
-            style: lableStyle,
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          CustomDatePicker(
-            radius: 10,
-          )
-        ],
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(
+              height: 10,
+            ),
+            Text(
+              "Objective type",
+              style: lableStyle,
+            ),
+            const SizedBox(
+              height: 5,
+            ),
+            CustomDropDownButton(
+              currentValue: currentObjectType,
+              items: [
+                DropdownMenuItem(
+                  child: Text("Team"),
+                  value: 1,
+                ),
+                DropdownMenuItem(
+                  child: Text("Individual"),
+                  value: 2,
+                ),
+              ],
+              radius: 10,
+              onChanged: (v) {
+                currentObjectType = v;
+                setState(() {});
+              },
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Text(
+              "User",
+              style: lableStyle,
+            ),
+            const SizedBox(
+              height: 5,
+            ),
+            CustomDropDownButton(
+              currentValue: currentAssignedMembder,
+              items: [
+                DropdownMenuItem(
+                  child: Text("Admin"),
+                  value: 1,
+                ),
+                DropdownMenuItem(
+                  child: Text("developer"),
+                  value: 2,
+                ),
+              ],
+              radius: 10,
+              onChanged: (v) {
+                currentAssignedMembder = v;
+                setState(() {});
+              },
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Text(
+              "Name",
+              style: lableStyle,
+            ),
+            const SizedBox(
+              height: 5,
+            ),
+            EditField(
+              hint: "Name",
+              radius: 10,
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Text(
+              "Description",
+              style: lableStyle,
+            ),
+            const SizedBox(
+              height: 5,
+            ),
+            EditField(
+              hint: "Description",
+              radius: 10,
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Text(
+              "Due Date",
+              style: lableStyle,
+            ),
+            const SizedBox(
+              height: 5,
+            ),
+            CustomDatePicker(
+              radius: 10,
+            )
+          ],
+        ),
       ),
     );
   }
@@ -312,8 +324,9 @@ class _RuleWidgetState extends State<RuleWidget> {
     final theme = Theme.of(context).textTheme;
     final lableStyle = theme.subtitle2!.copyWith(fontSize: 16);
     return Dialog(
+      insetPadding: EdgeInsets.symmetric(horizontal: 10),
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
@@ -321,28 +334,42 @@ class _RuleWidgetState extends State<RuleWidget> {
             const SizedBox(
               height: 10,
             ),
-            Text(
-              "Enter Rule",
-              style: lableStyle,
+            Container(
+              margin: EdgeInsets.only(top: 10),
+              child: Text(
+                "Key Rules",
+                style: Theme.of(context)
+                    .textTheme
+                    .headline1!
+                    .copyWith(fontWeight: FontWeight.w500),
+              ),
             ),
+
+            Divider(
+              color: Colors.grey,
+            ),
+            // Text(
+            //   "Enter Rule",
+            //   style: lableStyle,
+            // ),
             const SizedBox(
               height: 10,
             ),
             EditField(
               controller: ruleController,
-              hint: "name",
+              hint: "Enter Name",
               radius: 10,
             ),
             const SizedBox(
               height: 20,
             ),
-            Text(
-              "Due Date",
-              style: lableStyle,
-            ),
-            const SizedBox(
-              height: 10,
-            ),
+            // Text(
+            //   "Due Date",
+            //   style: lableStyle,
+            // ),
+            // const SizedBox(
+            //   height: 10,
+            // ),
             CustomDatePicker(
               radius: 10,
               onDateChange: (d) {
@@ -352,25 +379,45 @@ class _RuleWidgetState extends State<RuleWidget> {
             const SizedBox(
               height: 10,
             ),
-            Align(
-              alignment: Alignment.centerRight,
-              child: InkWell(
-                onTap: () {
-                  if (ruleController.text == "") {
-                    showToast("Enter Rule");
-                  } else {
-                    print(dueDate.toString());
-                  }
-                  RuleModel rule =
-                      RuleModel(name: ruleController.text, date: dueDate);
-                  Navigator.pop(context, rule);
+            // Align(
+            //   alignment: Alignment.centerRight,
+            //   child: InkWell(
+            //     onTap: () {
+            //       if (ruleController.text == "") {
+            //         showToast("Enter Rule");
+            //       } else {
+            //         print(dueDate.toString());
+            //       }
+            //       RuleModel rule =
+            //           RuleModel(name: ruleController.text, date: dueDate);
+            //       Navigator.pop(context, rule);
 
-                  // Navigator.pop(context);
-                },
-                child: Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: Text("Add"),
+            //       // Navigator.pop(context);
+            //     },
+            //     child: Padding(
+            //       padding: const EdgeInsets.all(12.0),
+            //       child: Text("Add"),
+            //     ),
+            //   ),
+            // ),
+            InkWell(
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child: Container(
+                height: 40,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.blue,
                 ),
+                child: Center(
+                    child: Text(
+                  "ADD RULES",
+                  style: Theme.of(context)
+                      .textTheme
+                      .button!
+                      .copyWith(color: Colors.white),
+                )),
               ),
             ),
           ],

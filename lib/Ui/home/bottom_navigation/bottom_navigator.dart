@@ -24,10 +24,12 @@ class BottomNavigator extends StatefulWidget {
 
 class _BottomNavigatorState extends State<BottomNavigator> {
   final List<BottomNavigationBarItem> items = [
-    BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Dashboard'),
     BottomNavigationBarItem(
-        icon: Icon(Icons.emoji_objects), label: 'Objective'),
-    BottomNavigationBarItem(icon: Icon(Icons.account_circle), label: 'Profile'),
+        icon: Icon(Icons.home_outlined), label: 'Dashboard'),
+    BottomNavigationBarItem(
+        icon: Icon(Icons.emoji_objects_outlined), label: 'Objective'),
+    BottomNavigationBarItem(
+        icon: Icon(Icons.person_outline_outlined), label: 'Profile'),
   ];
   int currentIndex = 0;
   @override

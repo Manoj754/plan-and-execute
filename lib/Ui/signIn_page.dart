@@ -12,6 +12,14 @@ class SignIn extends StatefulWidget {
   _SignInState createState() => _SignInState();
 }
 
+final background = "assets/images/bg4.png";
+final BoxDecoration backGroundDecoration = BoxDecoration(
+          image: DecorationImage(
+              image: AssetImage(
+                background,
+              ),
+              fit: BoxFit.cover),
+        ); 
 class _SignInState extends State<SignIn> {
   bool remberme = false;
   @override
@@ -20,13 +28,7 @@ class _SignInState extends State<SignIn> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-              image: AssetImage(
-                "assets/images/home_bg.png",
-              ),
-              fit: BoxFit.cover),
-        ),
+        decoration: backGroundDecoration,
         child: SafeArea(
             child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 18),
@@ -58,14 +60,14 @@ class _SignInState extends State<SignIn> {
                 height: 40,
               ),
               EditField(
-                leading: Icons.person,
+                leading: Icons.email_outlined,
                 hint: "abc@gmail.com",
               ),
               const SizedBox(
                 height: 10,
               ),
               EditField(
-                leading: Icons.lock,
+                leading: Icons.lock_outline,
                 hint: "Password",
               ),
               const SizedBox(

@@ -31,8 +31,7 @@ class SingleRuleWidget extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(4.0),
                 child: Icon(
-                  Icons.delete,
-                  color: Colors.red,
+                  Icons.delete_outlined,
                 ),
               ),
             ],

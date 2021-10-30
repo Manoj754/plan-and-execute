@@ -10,6 +10,7 @@ import 'package:plan_execute/Ui/home/components/team_expansion.dart';
 import 'package:plan_execute/Ui/home/dashboard/dash_board.dart';
 import 'package:plan_execute/Ui/home/objective/objective_page.dart';
 import 'package:plan_execute/Ui/home/profile/profile_page.dart';
+import 'package:plan_execute/Ui/signIn_page.dart';
 import 'package:plan_execute/constants/colors.dart';
 
 import 'dart:math' as math;
@@ -69,56 +70,63 @@ class _HomePageState extends State<HomePage> {
     //   body: Container(),
     //   drawer: CustomDrawer(),
     // );
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: PreferredSize(
-        child: CommonAppBar(
-          pageNumber: _bottomNavController.val,
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      decoration: BoxDecoration(
+          image: DecorationImage(
+              image: AssetImage(background), fit: BoxFit.cover)),
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        backgroundColor: Colors.transparent,
+        appBar: PreferredSize(
+          child: CommonAppBar(
+            pageNumber: _bottomNavController.val,
+          ),
+          preferredSize: Size(0, 50),
         ),
-        preferredSize: Size(0, 50),
-      ),
-      // body: DrawerUserController(
-      //   screenIndex: drawerIndex,
-      //   drawerWidth: MediaQuery.of(context).size.width * 0.85,
-      //   onDrawerCall: (DrawerIndex drawerIndexdata) {
-      //     // changeIndex(drawerIndexdata);
-      //     //callback from drawer for replace screen as user need with passing DrawerIndex(Enum index)
-      //   },
-      //   screenView: screenView,
-      //   //we replace screen view as we need on navigate starting screens like MyHomePage, HelpScreen, FeedbackScreen, etc...
-      // ),
-      body: Container(
-        height: MediaQuery.of(context).size.height,
-        child: Column(
-          children: [
-            Expanded(
-                child: PageView(
-              onPageChanged: (i) {
-                print(i);
-                _bottomNavController.value = i;
-              },
-              physics: NeverScrollableScrollPhysics(),
-              controller: controller,
-              children: [
-                const DashBoard(),
-                const ObjectivePage(),
-                const ProfilePage()
-              ],
-            )),
-            // Expanded(
-            //   child: Center(
-            //     child: Text("home"),
-            //   ),
-            // ),
-            BottomNavigator(
-              controller: controller,
-              navController: _bottomNavController,
-            ),
-          ],
+        // body: DrawerUserController(
+        //   screenIndex: drawerIndex,
+        //   drawerWidth: MediaQuery.of(context).size.width * 0.85,
+        //   onDrawerCall: (DrawerIndex drawerIndexdata) {
+        //     // changeIndex(drawerIndexdata);
+        //     //callback from drawer for replace screen as user need with passing DrawerIndex(Enum index)
+        //   },
+        //   screenView: screenView,
+        //   //we replace screen view as we need on navigate starting screens like MyHomePage, HelpScreen, FeedbackScreen, etc...
+        // ),
+        body: Container(
+          height: MediaQuery.of(context).size.height,
+          child: Column(
+            children: [
+              Expanded(
+                  child: PageView(
+                onPageChanged: (i) {
+                  print(i);
+                  _bottomNavController.value = i;
+                },
+                physics: NeverScrollableScrollPhysics(),
+                controller: controller,
+                children: [
+                  const DashBoard(),
+                  const ObjectivePage(),
+                  ProfilePage()
+                ],
+              )),
+              // Expanded(
+              //   child: Center(
+              //     child: Text("home"),
+              //   ),
+              // ),
+              BottomNavigator(
+                controller: controller,
+                navController: _bottomNavController,
+              ),
+            ],
+          ),
         ),
+        // drawer: CustomDrawer(),
+        // bottomNavigationBar:
       ),
-      // drawer: CustomDrawer(),
-      // bottomNavigationBar:
     );
   }
 }

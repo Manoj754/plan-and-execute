@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:plan_execute/constants/colors.dart';
 import 'package:plan_execute/data/models/objective_model.dart';
+import 'package:plan_execute/routes/routes.dart';
 
 class ObjectivePage extends StatefulWidget {
   const ObjectivePage({Key? key}) : super(key: key);
@@ -12,22 +13,46 @@ class ObjectivePage extends StatefulWidget {
 class _ObjectivePageState extends State<ObjectivePage> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12),
-        child: Column(
-          children: [
-            ListView.builder(
-              shrinkWrap: true,
-              itemBuilder: (context, index) {
-                return SingleObjectiveWidget(objective: objectives[0]);
-              },
-              itemCount: 5,
+    return Stack(
+      children: [
+        Container(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            child: Column(
+              children: [
+                ListView.builder(
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) {
+                    return SingleObjectiveWidget(objective: objectives[0]);
+                  },
+                  itemCount: 5,
+                ),
+                // SingleSrollableWidget(),
+              ],
             ),
-            // SingleSrollableWidget(),
-          ],
+          ),
         ),
-      ),
+        Padding(
+          padding: const EdgeInsets.all(18.0),
+          child: Align(
+            child: FloatingActionButton(
+              shape: RoundedRectangleBorder(
+                  side: BorderSide(
+                      color: Colors.black.withOpacity(.5), width: .5),
+                  borderRadius: BorderRadius.circular(100)),
+              backgroundColor: Colors.white,
+              onPressed: () {
+                Navigator.pushNamed(context, PageRoutes.addObjective);
+              },
+              child: Icon(
+                Icons.add,
+                color: Colors.black,
+              ),
+            ),
+            alignment: Alignment.bottomRight,
+          ),
+        )
+      ],
     );
   }
 }
@@ -140,118 +165,139 @@ class _SingleObjectiveWidgetState extends State<SingleObjectiveWidget> {
               ),
             ),
           ),
-          AnimatedContainer(
-            duration: Duration(milliseconds: 300),
-            height: 76,
-            width: isOpen ? size.width - 90 : 30,
+          Container(
             decoration: BoxDecoration(
-                color: theme.primaryColor,
-                borderRadius: BorderRadius.circular(6)),
-            child: Row(
-              children: [
-                Container(
-                  width: 30,
-                  child: GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          isOpen = !isOpen;
-                        });
-                      },
-                      onHorizontalDragEnd: (v) {
-                        setState(() {
-                          isOpen = !isOpen;
-                        });
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 8.0),
-                        child: Icon(
-                          !isOpen
-                              ? Icons.arrow_back_ios
-                              : Icons.arrow_forward_ios,
-                          color: Colors.white,
-                        ),
-                      )),
-                ),
-                isOpen
-                    ? Flexible(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(6),
+            ),
+            child: AnimatedContainer(
+              duration: Duration(milliseconds: 300),
+              height: 76,
+              width: isOpen ? size.width - 90 : 30,
+              decoration: BoxDecoration(
+                // color: Color(0xFF8150E9),
+                color: primaryColor.withAlpha(220),
+                borderRadius: BorderRadius.circular(6),
+              ),
+              child: Row(
+                children: [
+                  Container(
+                    width: 30,
+                    child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            isOpen = !isOpen;
+                          });
+                        },
+                        onHorizontalDragEnd: (v) {
+                          setState(() {
+                            isOpen = !isOpen;
+                          });
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 8.0),
+                          child: Icon(
+                            !isOpen
+                                ? Icons.arrow_back_ios
+                                : Icons.arrow_forward_ios,
+                            color: Colors.white,
+                          ),
+                        )),
+                  ),
+                  if (isOpen)
+                    Flexible(
                         child: Row(
-                        children: [
-                          Expanded(
+                      children: [
+                        Expanded(
                             child: Column(
-                              children: [
-                                IconButton(
-                                  icon: Icon(
-                                    Icons.visibility,
-                                    color: Colors.white,
-                                  ),
-                                  onPressed: () {},
+                          children: [
+                            IconButton(
+                              icon: Icon(
+                                Icons.textsms_outlined,
+                                color: Colors.white,
+                              ),
+                              onPressed: () {
+                                Navigator.pushNamed(
+                                    context, PageRoutes.chatScreen);
+                              },
+                            ),
+                            Flexible(
+                                child: Text(
+                              'Chat',
+                              style: TextStyle(color: Colors.white),
+                            ))
+                          ],
+                        )),
+                        Expanded(
+                          child: Column(
+                            children: [
+                              IconButton(
+                                icon: Icon(
+                                  Icons.visibility_outlined,
+                                  color: Colors.white,
                                 ),
-                                Flexible(
+                                onPressed: () {
+                                  Navigator.pushNamed(
+                                      context, PageRoutes.addObjective);
+                                },
+                              ),
+                              Flexible(
+                                child: InkWell(
+                                  onTap: () {},
                                   child: Text(
                                     'Show',
                                     style: TextStyle(color: Colors.white),
                                   ),
-                                )
-                              ],
-                            ),
+                                ),
+                              )
+                            ],
                           ),
-                          Expanded(
-                              child: Column(
-                            children: [
-                              IconButton(
-                                icon: Icon(
-                                  Icons.edit,
-                                  color: Colors.white,
-                                ),
-                                onPressed: () {},
+                        ),
+                        Expanded(
+                            child: Column(
+                          children: [
+                            IconButton(
+                              icon: Icon(
+                                Icons.edit_outlined,
+                                color: Colors.white,
                               ),
-                              Flexible(
-                                child: Text(
-                                  'Edit',
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                              )
-                            ],
-                          )),
-                          Expanded(
-                              child: Column(
-                            children: [
-                              IconButton(
-                                icon: Icon(
-                                  Icons.delete,
-                                  color: Colors.white,
-                                ),
-                                onPressed: () {},
-                              ),
-                              Flexible(
-                                child: Text(
-                                  'Delete',
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                              )
-                            ],
-                          )),
-                          Expanded(
-                              child: Column(
-                            children: [
-                              IconButton(
-                                icon: Icon(
-                                  Icons.chat,
-                                  color: Colors.white,
-                                ),
-                                onPressed: () {},
-                              ),
-                              Flexible(
-                                  child: Text(
-                                'Chat',
+                              onPressed: () {
+                                Navigator.pushNamed(
+                                    context, PageRoutes.addObjective);
+                              },
+                            ),
+                            Flexible(
+                              child: Text(
+                                'Edit',
                                 style: TextStyle(color: Colors.white),
-                              ))
-                            ],
-                          ))
-                        ],
-                      ))
-                    : Container(),
-              ],
+                              ),
+                            )
+                          ],
+                        )),
+                        Expanded(
+                            child: Column(
+                          children: [
+                            IconButton(
+                              icon: Icon(
+                                Icons.delete_outlined,
+                                color: Colors.white,
+                              ),
+                              onPressed: () {},
+                            ),
+                            Flexible(
+                              child: Text(
+                                'Delete',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            )
+                          ],
+                        )),
+                      ],
+                    ))
+                  else
+                    Container(),
+                ],
+              ),
             ),
           )
         ],

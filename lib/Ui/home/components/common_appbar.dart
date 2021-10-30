@@ -57,6 +57,7 @@ class _CommonAppBarState extends State<CommonAppBar> {
                           )
                         : Text("API Main's Personal team",
                             overflow: TextOverflow.clip,
+                            maxLines: 1,
                             style: theme.headline1)),
                 widget.pageNumber == 1
                     ? Row(
@@ -73,7 +74,7 @@ class _CommonAppBarState extends State<CommonAppBar> {
                               onPressed: () {
                                 openBottomSheet(context);
                               },
-                              icon: Icon(Icons.filter_alt))
+                              icon: Icon(Icons.filter_alt_outlined))
                         ],
                       )
                     : Container()

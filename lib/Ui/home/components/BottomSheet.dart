@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:plan_execute/constants/colors.dart';
 
 void openBottomSheet(BuildContext context) {
   showModalBottomSheet(
@@ -47,6 +48,8 @@ class _SortBotttomSheetState extends State<SortBotttomSheet> {
     EdgeInsetsGeometry padding =
         EdgeInsets.symmetric(horizontal: size.width * 0.04);
     return Card(
+      elevation: 5,
+      color: dialogBackgroundColor,
       margin: EdgeInsets.all(0),
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
@@ -57,7 +60,6 @@ class _SortBotttomSheetState extends State<SortBotttomSheet> {
           vertical: 8,
         ),
         child: Container(
-          color: Colors.transparent,
           width: size.width,
           child: Padding(
             padding: const EdgeInsets.all(8.0),
@@ -188,11 +190,12 @@ class _SortBotttomSheetState extends State<SortBotttomSheet> {
               ? Theme.of(context).primaryColor
               : Colors.white,
         ),
-        padding: EdgeInsets.symmetric(vertical: 8),
+        padding: EdgeInsets.symmetric(vertical: 8, horizontal: 4),
         width: (size.width * 0.8 / 2) - horPadding * 2,
         child: Center(
             child: Text(
           sortingValues.title,
+          textAlign: TextAlign.center,
           style: TextStyle(
               color:
                   index == sortingValues.index ? Colors.white : Colors.black),

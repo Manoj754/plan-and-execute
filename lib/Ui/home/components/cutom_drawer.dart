@@ -33,55 +33,53 @@ class _CustomDrawerState extends State<CustomDrawer> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context).textTheme;
-    return SafeArea(
-      child: Container(
-        // color: Colors.,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Switch Teams",
-                style: theme.headline1,
-              ),
-              Divider(
-                height: 20,
-                thickness: 2,
-              ),
-              Expanded(
-                child: ListView.builder(
-                  itemBuilder: (context, index) {
-                    return SingleTeamWidget(teamModel: teams[index]);
-                  },
-                  itemCount: teams.length,
+    return Scaffold(
+      backgroundColor: Color(0xfff3f3f4),
+      body: SafeArea(
+        child: Container(
+          // color: Color(0xfff3f3f4),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Switch Teams",
+                  style: theme.headline1,
                 ),
-                // child: Column(
-                //   children: [
-                //     SingleTeamWidget(
-                //       teamModel: teams[0],
-                //     )
-                //   ],
-                // ),
-              ),
-              SingleOption(
-                icon: Icons.add,
-                label: "Create new team",
-                onTap: () {
-                  Navigator.pushNamed(context, PageRoutes.createNewTeamPage);
-                },
-              ),
-              SingleOption(
-                icon: Icons.settings,
-                label: "Team setting",
-                onTap: () {},
-              ),
-              SingleOption(
-                icon: Icons.help,
-                label: "Help",
-                onTap: () {},
-              ),
-            ],
+                Divider(
+                  height: 20,
+                  thickness: 2,
+                ),
+                Expanded(
+                  child: ListView.builder(
+                    itemBuilder: (context, index) {
+                      return SingleTeamWidget(teamModel: teams[index]);
+                    },
+                    itemCount: teams.length,
+                  ),
+                  // child: Column(
+                  //   children: [
+                  //     SingleTeamWidget(
+                  //       teamModel: teams[0],
+                  //     )
+                  //   ],
+                  // ),
+                ),
+                SingleOption(
+                  icon: Icons.add,
+                  label: "Create new team",
+                  onTap: () {
+                    Navigator.pushNamed(context, PageRoutes.createNewTeamPage);
+                  },
+                ),
+                SingleOption(
+                  icon: Icons.help,
+                  label: "Help",
+                  onTap: () {},
+                ),
+              ],
+            ),
           ),
         ),
       ),

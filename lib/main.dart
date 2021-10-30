@@ -1,7 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:plan_execute/Ui/home/objective/create_objective.dart';
+
 import 'package:plan_execute/constants/colors.dart';
 import 'package:plan_execute/routes/routes.dart';
 
@@ -26,9 +26,9 @@ class MyApp extends StatelessWidget {
           primarySwatch: MaterialColor(0xff3610ef, primaryColors),
           accentColor: primaryColor,
           dividerColor: Colors.transparent,
-          iconTheme: IconThemeData(color: primaryColor.withOpacity(.5)),
+          iconTheme: IconThemeData(color: primaryColor.withOpacity(.8)),
           scaffoldBackgroundColor: scafolBackgroudColor,
-          dialogBackgroundColor: scafolBackgroudColor,
+          dialogBackgroundColor: dialogBackgroundColor,
           textTheme: TextTheme(
             bodyText1: TextStyle(fontWeight: FontWeight.w700, fontSize: 30),
             bodyText2: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
@@ -58,9 +58,16 @@ class MyApp extends StatelessWidget {
                 color: darkTextColor.withOpacity(.75)),
           ),
           tabBarTheme: TabBarTheme(
-            unselectedLabelColor: Colors.grey,
-            labelColor: primaryColor,
-          ),
+              unselectedLabelColor: Colors.grey,
+              labelColor: primaryColor,
+              labelStyle: TextStyle(
+                  fontWeight: FontWeight.w700,
+                  fontSize: 14,
+                  color: darkTextColor.withOpacity(.8)),
+              unselectedLabelStyle: TextStyle(
+                  fontWeight: FontWeight.w400,
+                  fontSize: 14,
+                  color: darkTextColor.withOpacity(.8))),
           appBarTheme: AppBarTheme(
               backgroundColor: transparentColor,
               elevation: 0,
@@ -78,8 +85,8 @@ class MyApp extends StatelessWidget {
       //   // is not restarted.
       //   primarySwatch: Colors.blue,
       // ),
-      // initialRoute: PageRoutes.signInRoute,
-      home: CreateObjective(),
+      initialRoute: PageRoutes.signInRoute,
+      // home: chat_screen(),
       onGenerateRoute: PageRoutes.routeGenerator,
     );
   }

@@ -56,11 +56,11 @@ class SearchField extends StatelessWidget {
       decoration: InputDecoration(
         filled: true,
         fillColor: Colors.white,
-        contentPadding: EdgeInsets.all(8),
+        contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         prefixIconConstraints: BoxConstraints(minHeight: 60, minWidth: 60),
-        prefixIcon: Icon(
-          leading,
-        ),
+        // prefixIcon: Icon(
+        //   leading,
+        // ),
         hintText: hint,
         hintStyle: theme.textTheme.subtitle1,
         focusColor: primaryColor,

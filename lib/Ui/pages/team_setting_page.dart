@@ -4,12 +4,12 @@ import 'package:plan_execute/Ui/components/edit_field.dart';
 import 'package:plan_execute/Ui/signIn_page.dart';
 import 'package:plan_execute/constants/colors.dart';
 
-class CreateNewTeamPage extends StatefulWidget {
+class TeamSettingPage extends StatefulWidget {
   @override
-  CreateNewTeamPageState createState() => CreateNewTeamPageState();
+  _TeamSettingPageState createState() => _TeamSettingPageState();
 }
 
-class CreateNewTeamPageState extends State<CreateNewTeamPage> {
+class _TeamSettingPageState extends State<TeamSettingPage> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -19,7 +19,7 @@ class CreateNewTeamPageState extends State<CreateNewTeamPage> {
       child: Scaffold(
         appBar: AppBar(
           title: Text(
-            "Creat New Team",
+            "Team Setting",
             style: Theme.of(context).textTheme.headline1,
           ),
         ),
@@ -107,7 +107,7 @@ class CreateNewTeamPageState extends State<CreateNewTeamPage> {
                   ),
                   child: Center(
                       child: Text(
-                    "Creat Team",
+                    "Save Team",
                     style: TextStyle(color: Colors.white),
                   ))),
               // CommonButton(label: ,)

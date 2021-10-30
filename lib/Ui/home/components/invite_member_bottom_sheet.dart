@@ -22,7 +22,6 @@ class InviteMembetBottomShit extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context).textTheme;
     return Card(
-      
       margin: EdgeInsets.all(0),
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
@@ -76,7 +75,7 @@ class InviteMembetBottomShit extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: 10),
                 child: Row(
                   children: [
-                    Icon(Icons.person_add_alt_1),
+                    Icon(Icons.person_add_alt_1_outlined),
                     const SizedBox(
                       width: 20,
                     ),
@@ -88,16 +87,34 @@ class InviteMembetBottomShit extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(
-              height: 10,
+            InkWell(
+              onTap: () {
+                Navigator.pushNamed(context, PageRoutes.teamSetting);
+              },
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.settings_outlined,
+                    ),
+                    const SizedBox(
+                      width: 20,
+                    ),
+                    Text(
+                      "Team setting",
+                      style: theme.headline3!,
+                    )
+                  ],
+                ),
+              ),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 10),
               child: Row(
                 children: [
                   Icon(
-                    Icons.delete,
-                    color: primaryColor,
+                    Icons.delete_outline,
                   ),
                   const SizedBox(
                     width: 20,
