@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:plan_execute/constants/colors.dart';
 
 class CustomDatePicker extends StatefulWidget {
   final double? radius;
@@ -13,6 +14,12 @@ class CustomDatePicker extends StatefulWidget {
 
 class _CustomDatePickerState extends State<CustomDatePicker> {
   DateTime? selectedDate;
+  @override
+  void initState() {
+    selectedDate = widget.date;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context).textTheme;
@@ -49,7 +56,10 @@ class _CustomDatePickerState extends State<CustomDatePicker> {
                 selectedDate == null
                     ? " DD-MM-YYYY"
                     : selectedDate!.getFormated(),
-                style: theme.subtitle1,
+                style: selectedDate == null
+                    ? theme.subtitle1
+                    : theme.subtitle1!
+                        .copyWith(color: darkTextColor.withOpacity(.7)),
               )),
               Icon(
                 Icons.calendar_today,

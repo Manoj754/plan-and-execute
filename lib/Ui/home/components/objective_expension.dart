@@ -114,10 +114,12 @@ class _ObjectiveListState extends State<ObjectiveList> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final size = MediaQuery.of(context).size;
     return Center(
       child: Container(
-        color: Colors.white,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(5),
+          color: Colors.white,
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -221,7 +223,7 @@ class SingleObjectiveWidget extends StatelessWidget {
               children: [
                 CircleAvatar(
                   backgroundImage: NetworkImage(model.profile),
-                  radius: 18,
+                  radius: size.height * heightFactor * .6,
                 ),
               ],
             ),

@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.plan_execute">
+    <uses-permission android:name="android.permission.INTERNET" />
    <application
         android:label="plan_execute"
         android:icon="@mipmap/ic_launcher">

@@ -263,7 +263,8 @@ class _SingleObjectiveWidgetState extends State<SingleObjectiveWidget> {
                               ),
                               onPressed: () {
                                 Navigator.pushNamed(
-                                    context, PageRoutes.addObjective);
+                                    context, PageRoutes.addObjective,
+                                    arguments: true);
                               },
                             ),
                             Flexible(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:plan_execute/constants/colors.dart';
 
 class CustomDropDownButton extends StatefulWidget {
   final dynamic currentValue;
@@ -28,6 +29,10 @@ class _CustomDropDownButtonState extends State<CustomDropDownButton> {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10),
         child: DropdownButton(
+          style: Theme.of(context)
+              .textTheme
+              .subtitle1!
+              .copyWith(color: darkTextColor.withOpacity(.7)),
           isExpanded: true,
           elevation: 1,
           underline: Container(),

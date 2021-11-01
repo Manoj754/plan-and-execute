@@ -84,6 +84,9 @@ class _ProfilePageState extends State<ProfilePage> {
               Icons.arrow_forward_ios,
               size: 20,
             ),
+            onTap: () {
+              Navigator.pushNamed(context, PageRoutes.chatNotification);
+            },
             leading: Icon(
               Icons.notifications_none,
             ),

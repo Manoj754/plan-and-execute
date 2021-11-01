@@ -107,7 +107,7 @@ class _TeamsExpantionState extends State<TeamsExpantion> {
                                     vertical: 2, horizontal: 8),
                                 child: Text(
                                   teams[index].owner,
-                                  style: theme.textTheme.headline6,
+                                  style: theme.textTheme.headline3,
                                 ),
                               ))
                         ],

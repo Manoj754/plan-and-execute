@@ -1,7 +1,10 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:plan_execute/Ui/home/home_screen.dart';
 import 'package:plan_execute/Ui/home/objective/create_objective.dart';
+import 'package:plan_execute/Ui/home/objective/show_objective.dart';
 import 'package:plan_execute/Ui/home/profile/change_password.dart';
 import 'package:plan_execute/Ui/home/profile/edit_profile.dart';
 import 'package:plan_execute/Ui/new_file.dart';
@@ -9,6 +12,7 @@ import 'package:plan_execute/Ui/pages/chat_screen.dart';
 import 'package:plan_execute/Ui/pages/create_new_team_page.dart';
 import 'package:plan_execute/Ui/pages/forgot_password.dart';
 import 'package:plan_execute/Ui/pages/invite_member_page.dart';
+import 'package:plan_execute/Ui/pages/notification_setting.dart';
 import 'package:plan_execute/Ui/pages/privacy_policy.dart';
 import 'package:plan_execute/Ui/pages/team_setting_page.dart';
 import 'package:plan_execute/Ui/signIn_page.dart';
@@ -25,6 +29,8 @@ class PageRoutes {
   static const String chatScreen = "/chatScreen";
   static const String privacyPolicy = "/privacyPolicy";
   static const String teamSetting = "/teamSetting";
+  static const String chatNotification = "/chatNotification";
+  static const String showObjective = "/showObjective";
   static Route<dynamic>? routeGenerator(RouteSettings settings) {
     Widget widget;
     switch (settings.name) {
@@ -50,7 +56,13 @@ class PageRoutes {
         widget = CreateNewTeamPage();
         break;
       case addObjective:
-        widget = CreateObjective();
+        if (settings.arguments is bool)
+          widget = CreateObjective(
+            isEdit: settings.arguments as bool,
+          );
+        else
+          widget = CreateObjective();
+
         break;
       case chatScreen:
         widget = ChatScreen();
@@ -58,8 +70,15 @@ class PageRoutes {
       case privacyPolicy:
         widget = PrivacyPolicy();
         break;
-          case teamSetting:
+      case teamSetting:
         widget = TeamSettingPage();
+        break;
+
+      case chatNotification:
+        widget = ChatNotification();
+        break;
+      case showObjective:
+        widget = ShowObjectivePage();
         break;
 
       default:

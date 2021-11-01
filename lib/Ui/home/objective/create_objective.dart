@@ -1,17 +1,18 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:plan_execute/Ui/components/common_button.dart';
 import 'package:plan_execute/Ui/components/date_picker.dart';
 import 'package:plan_execute/Ui/components/drop_down_button.dart';
 import 'package:plan_execute/Ui/components/edit_field.dart';
 import 'package:plan_execute/Ui/home/objective/rule_widget.dart';
 import 'package:plan_execute/Ui/signIn_page.dart';
-import 'package:plan_execute/Ui/utils.dart';
 import 'package:plan_execute/constants/colors.dart';
 import 'package:plan_execute/data/models/rule_model.dart';
 
 class CreateObjective extends StatefulWidget {
-  CreateObjective({Key? key}) : super(key: key);
+  final bool isEdit;
+  CreateObjective({this.isEdit = false, Key? key}) : super(key: key);
 
   @override
   _CreateObjectiveState createState() => _CreateObjectiveState();
@@ -37,7 +38,7 @@ class _CreateObjectiveState extends State<CreateObjective>
       child: Scaffold(
         appBar: AppBar(
           title: Text(
-            "Create Objective",
+            widget.isEdit ? "Edit Objective" : "Create Objective",
             style: Theme.of(context).textTheme.headline1,
           ),
         ),
@@ -83,9 +84,14 @@ class _CreateObjectiveState extends State<CreateObjective>
                 ),
               ),
               Expanded(
-                child: TabBarView(
-                    controller: controller,
-                    children: [PrimaryDetails(), KeyRulesScreen()]),
+                child: TabBarView(controller: controller, children: [
+                  PrimaryDetails(
+                    isEdit: widget.isEdit,
+                  ),
+                  KeyRulesScreen(
+                    isEdit: widget.isEdit,
+                  )
+                ]),
               ),
               CommonButton(
                 label: "Save",
@@ -103,42 +109,45 @@ class _CreateObjectiveState extends State<CreateObjective>
   }
 }
 
-class CustomTabWidget extends StatefulWidget {
-  final int index;
-  final String label;
-  final Widget child;
-  final Widget? unselectedChild;
-  final TabController controller;
-  CustomTabWidget(
-      {required this.index,
-      required this.label,
-      required this.child,
-      this.unselectedChild,
-      required this.controller,
-      Key? key})
-      : super(key: key);
+// class CustomTabWidget extends StatefulWidget {
+//   final int index;
+//   final String label;
+//   final Widget child;
+//   final Widget? unselectedChild;
+//   final TabController controller;
+//   final bool isEdit;
+//   CustomTabWidget(
+//       {required this.index,
+//       required this.label,
+//       required this.child,
+//       this.unselectedChild,
+//       this.isEdit = false,
+//       required this.controller,
+//       Key? key})
+//       : super(key: key);
 
-  @override
-  _CustomTabWidgetState createState() => _CustomTabWidgetState();
-}
+//   @override
+//   _CustomTabWidgetState createState() => _CustomTabWidgetState();
+// }
 
-class _CustomTabWidgetState extends State<CustomTabWidget> {
-  @override
-  void initState() {
-    widget.controller.addListener(() {
-      setState(() {});
-    });
-    super.initState();
-  }
+// class _CustomTabWidgetState extends State<CustomTabWidget> {
+//   @override
+//   void initState() {
+//     widget.controller.addListener(() {
+//       setState(() {});
+//     });
+//     super.initState();
+//   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Container();
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container();
+//   }
+// }
 
 class PrimaryDetails extends StatefulWidget {
-  PrimaryDetails({Key? key}) : super(key: key);
+  final bool isEdit;
+  PrimaryDetails({this.isEdit = false, Key? key}) : super(key: key);
 
   @override
   _PrimaryDetailsState createState() => _PrimaryDetailsState();
@@ -147,6 +156,19 @@ class PrimaryDetails extends StatefulWidget {
 class _PrimaryDetailsState extends State<PrimaryDetails> {
   dynamic currentObjectType = 1;
   dynamic currentAssignedMembder = 1;
+  TextEditingController namecontroller = TextEditingController();
+  TextEditingController descriptioncontroller = TextEditingController();
+  @override
+  void initState() {
+    if (widget.isEdit) {
+      namecontroller.text = "Task 1";
+      descriptioncontroller.text = "Do it fast";
+      currentObjectType = 2;
+    }
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context).textTheme;
@@ -226,6 +248,7 @@ class _PrimaryDetailsState extends State<PrimaryDetails> {
             EditField(
               hint: "Name",
               radius: 10,
+              controller: namecontroller,
             ),
             const SizedBox(
               height: 10,
@@ -240,6 +263,7 @@ class _PrimaryDetailsState extends State<PrimaryDetails> {
             EditField(
               hint: "Description",
               radius: 10,
+              controller: descriptioncontroller,
             ),
             const SizedBox(
               height: 10,
@@ -253,6 +277,7 @@ class _PrimaryDetailsState extends State<PrimaryDetails> {
             ),
             CustomDatePicker(
               radius: 10,
+              date: DateTime.now(),
             )
           ],
         ),
@@ -262,7 +287,8 @@ class _PrimaryDetailsState extends State<PrimaryDetails> {
 }
 
 class KeyRulesScreen extends StatefulWidget {
-  const KeyRulesScreen({Key? key}) : super(key: key);
+  final bool isEdit;
+  const KeyRulesScreen({this.isEdit = false, Key? key}) : super(key: key);
 
   @override
   _KeyRulesScreenState createState() => _KeyRulesScreenState();

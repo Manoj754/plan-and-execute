@@ -112,7 +112,7 @@ class _MemberExpansionState extends State<MemberExpansion> {
                                   child: Padding(
                                     padding: const EdgeInsets.all(1.0),
                                     child: CircleAvatar(
-                                      radius: size.height * heightFactor * .4,
+                                      radius: size.height * heightFactor * .6,
                                       backgroundImage:
                                           NetworkImage(members[index].profile),
                                     ),
@@ -138,7 +138,7 @@ class _MemberExpansionState extends State<MemberExpansion> {
                                       padding: const EdgeInsets.symmetric(
                                           vertical: 2, horizontal: 8),
                                       child: Text(members[index].role,
-                                          style: theme.textTheme.headline6!),
+                                          style: theme.textTheme.headline3!),
                                     ))
                               ],
                             ),

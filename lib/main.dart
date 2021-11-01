@@ -71,6 +71,13 @@ class MyApp extends StatelessWidget {
           appBarTheme: AppBarTheme(
               backgroundColor: transparentColor,
               elevation: 0,
+              titleSpacing: 0,
+              brightness: Brightness.light,
+              
+              titleTextStyle: TextStyle(
+                  fontWeight: FontWeight.w700,
+                  fontSize: 18,
+                  color: darkTextColor.withOpacity(.8)),
               iconTheme: IconThemeData(color: Colors.black))),
 
       // theme: ThemeData(
