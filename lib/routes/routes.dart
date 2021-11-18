@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:plan_execute/Ui/auth_wrapper.dart';
 import 'package:plan_execute/Ui/home/home_screen.dart';
 import 'package:plan_execute/Ui/home/objective/create_objective.dart';
 import 'package:plan_execute/Ui/home/objective/show_objective.dart';
@@ -31,9 +32,13 @@ class PageRoutes {
   static const String teamSetting = "/teamSetting";
   static const String chatNotification = "/chatNotification";
   static const String showObjective = "/showObjective";
+  static const String authWrapper = "/";
   static Route<dynamic>? routeGenerator(RouteSettings settings) {
     Widget widget;
     switch (settings.name) {
+      case authWrapper:
+        widget = AuthWrapper();
+        break;
       case homeScreen:
         widget = HomeWrapper();
         break;

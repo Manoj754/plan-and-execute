@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:plan_execute/data/providers/providers.dart';
 import 'package:plan_execute/routes/routes.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -614,7 +616,8 @@ class _ProfilePageState extends State<ProfilePage> {
             visualDensity: VisualDensity(horizontal: -4, vertical: 0),
             contentPadding: EdgeInsets.only(left: 10),
             onTap: () {
-              Navigator.popAndPushNamed(context, PageRoutes.signInRoute);
+              context.read(authProvider).logout();
+              // Navigator.popAndPushNamed(context, PageRoutes.signInRoute);
             },
             trailing: Icon(
               Icons.arrow_forward_ios,

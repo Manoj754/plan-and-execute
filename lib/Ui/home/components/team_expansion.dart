@@ -106,7 +106,7 @@ class _TeamsExpantionState extends State<TeamsExpantion> {
                                 padding: const EdgeInsets.symmetric(
                                     vertical: 2, horizontal: 8),
                                 child: Text(
-                                  teams[index].owner,
+                                  teams[index].name,
                                   style: theme.textTheme.headline3,
                                 ),
                               ))

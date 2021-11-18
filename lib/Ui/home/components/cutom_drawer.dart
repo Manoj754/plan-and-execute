@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/all.dart';
 import 'package:plan_execute/Ui/home/components/invite_member_bottom_sheet.dart';
 import 'package:plan_execute/constants/colors.dart';
 import 'package:plan_execute/data/models/team_model.dart';
+import 'package:plan_execute/data/providers/providers.dart';
 import 'package:plan_execute/routes/routes.dart';
 
 final teams = [
@@ -22,7 +25,7 @@ final teams = [
           "https://images.unsplash.com/photo-1634923093368-c1022f628a34?ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwxOXx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"),
 ];
 
-class CustomDrawer extends StatefulWidget {
+class CustomDrawer extends StatefulHookWidget {
   CustomDrawer({Key? key}) : super(key: key);
 
   @override
@@ -32,6 +35,7 @@ class CustomDrawer extends StatefulWidget {
 class _CustomDrawerState extends State<CustomDrawer> {
   @override
   Widget build(BuildContext context) {
+    final teamNotifier = useProvider(teamProvider);
     final theme = Theme.of(context).textTheme;
     return Scaffold(
       backgroundColor: Color(0xfff3f3f4),
@@ -56,7 +60,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     itemBuilder: (context, index) {
                       return SingleTeamWidget(teamModel: teams[index]);
                     },
-                    itemCount: teams.length,
+                    itemCount: teamNotifier.teamModel.length,
                   ),
                   // child: Column(
                   //   children: [

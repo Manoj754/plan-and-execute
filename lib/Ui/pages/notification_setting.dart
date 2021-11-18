@@ -39,7 +39,9 @@ class _ChatNotificationState extends State<ChatNotification> {
                         color: Colors.amber),
                     child: Text(
                       "Objective",
-                      style: TextStyle(color: Colors.white),
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                   leading: CircleAvatar(

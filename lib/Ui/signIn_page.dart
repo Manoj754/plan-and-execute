@@ -2,8 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:plan_execute/Ui/components/common_button.dart';
 import 'package:plan_execute/Ui/components/edit_field.dart';
 import 'package:plan_execute/Ui/singup_page.dart';
+import 'package:plan_execute/Ui/utils.dart';
 import 'package:plan_execute/constants/colors.dart';
+import 'package:plan_execute/data/providers/AuthNotifier.dart';
+import 'package:plan_execute/data/providers/providers.dart';
 import 'package:plan_execute/routes/routes.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class SignIn extends StatefulWidget {
   SignIn({Key? key}) : super(key: key);
@@ -14,14 +18,25 @@ class SignIn extends StatefulWidget {
 
 final background = "assets/images/bg4.png";
 final BoxDecoration backGroundDecoration = BoxDecoration(
-          image: DecorationImage(
-              image: AssetImage(
-                background,
-              ),
-              fit: BoxFit.cover),
-        ); 
+  image: DecorationImage(
+      image: AssetImage(
+        background,
+      ),
+      fit: BoxFit.cover),
+);
+
 class _SignInState extends State<SignIn> {
   bool remberme = false;
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  late AuthNotifier authNotifier;
+  bool isLoading = false;
+  @override
+  void initState() {
+    authNotifier = context.read(authProvider);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -62,6 +77,7 @@ class _SignInState extends State<SignIn> {
               EditField(
                 leading: Icons.email_outlined,
                 hint: "abc@gmail.com",
+                controller: emailController,
               ),
               const SizedBox(
                 height: 10,
@@ -69,6 +85,7 @@ class _SignInState extends State<SignIn> {
               EditField(
                 leading: Icons.lock_outline,
                 hint: "Password",
+                controller: passwordController,
               ),
               const SizedBox(
                 height: 10,
@@ -108,11 +125,12 @@ class _SignInState extends State<SignIn> {
               ),
               Center(
                 child: CommonButton(
-                  onTap: () {
-                    Navigator.pushReplacementNamed(
-                        context, PageRoutes.homeScreen);
-                  },
-                  label: "LOG IN",
+                  // onTap: () {
+                  //   Navigator.pushReplacementNamed(
+                  //       context, PageRoutes.homeScreen);
+                  // },
+                  onTap: login,
+                  label: isLoading ? "Loading.." : "LOG IN",
                 ),
               ),
               const SizedBox(
@@ -147,5 +165,29 @@ class _SignInState extends State<SignIn> {
         )),
       ),
     );
+  }
+
+  Future login() async {
+    isLoading = true;
+    setState(() {});
+    if (!emailValidate(emailController.text)) {
+      showToast("Enter valid email");
+      isLoading = false;
+      if (mounted) setState(() {});
+      return;
+    }
+    if (passwordController.text.length == 0) {
+      showToast("Enter password");
+      isLoading = false;
+      if (mounted) setState(() {});
+      return;
+    }
+    // if (!remberme) {
+
+    // }
+    await authNotifier.login(
+        emailController.text, passwordController.text, remberme);
+    isLoading = false;
+    if (mounted) setState(() {});
   }
 }

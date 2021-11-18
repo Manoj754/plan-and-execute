@@ -1,8 +1,11 @@
+import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:plan_execute/constants/colors.dart';
+import 'package:plan_execute/data/providers/sp_helper.dart';
 import 'package:plan_execute/routes/routes.dart';
 
 Future<void> main() async {
@@ -11,7 +14,9 @@ Future<void> main() async {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
-  runApp(MyApp());
+  HttpOverrides.global = MyHttpOverrides();
+  await SpHelper.setPref();
+  runApp(ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -73,7 +78,6 @@ class MyApp extends StatelessWidget {
               elevation: 0,
               titleSpacing: 0,
               brightness: Brightness.light,
-              
               titleTextStyle: TextStyle(
                   fontWeight: FontWeight.w700,
                   fontSize: 18,
@@ -92,7 +96,7 @@ class MyApp extends StatelessWidget {
       //   // is not restarted.
       //   primarySwatch: Colors.blue,
       // ),
-      initialRoute: PageRoutes.signInRoute,
+      initialRoute: PageRoutes.authWrapper,
       // home: chat_screen(),
       onGenerateRoute: PageRoutes.routeGenerator,
     );
@@ -186,5 +190,14 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
+  }
+}
+
+class MyHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
   }
 }
