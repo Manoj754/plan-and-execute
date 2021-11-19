@@ -64,6 +64,10 @@ class ApiProvider {
     return _dio.get(apiend, queryParameters: map);
   }
 
+  Future<Response> _deleteApi(String apiend, {Map<String, dynamic>? map}) {
+    return _dio.delete(apiend, queryParameters: map);
+  }
+
   Future register(
       String name, String email, String password, bool isAgree) async {
     final response = await _postWithFormData(
@@ -118,17 +122,55 @@ class ApiProvider {
 
   deletTeam(TeamModel model) {}
 
-  /*Future createobjective(String? userid,String? name,String? due_date,String? description,String? ) async{
+  Future createobjective(String userid, String name, String due_date,
+      String description, Map allowuser) async {
     final response = await _postWithFormData(createobjectives, {
-      "user_id": ,
+      "user_id": userid,
+      "name": name,
+      "description": description,
+    });
+    print(response.data.toString());
+    if (response.statusCode == 200) {
+      return response.data["data"];
+    }
+    return ResponseError()
+      ..message = response.data['message'] ?? "Something went wrong";
+  }
 
-    })
-  }*/
+  Future viewobjective(String obj_id) async {
+    final response = await _getApi(viewobjectiv + "/" + obj_id, map: {});
+    print(response.data.toString());
+    if (response.statusCode == 200) {
+      return response.data['data']["0"];
+    }
+    return ResponseError()
+      ..message = response.data['message'] ?? "Something went wrong";
+  }
+
+  Future deleteobjective(String obj_id) async {
+    final response = await _deleteApi(deleteobjectiv + "/" + obj_id, map: {});
+    print(response.data.toString());
+    if (response.statusCode == 200) {
+      return response.data;
+    }
+    return ResponseError()
+      ..message = response.data['message'] ?? "Something went wrong";
+  }
+
+  Future deletekeyresult(String key_id) async {
+    final response = await _deleteApi(keyresult + "/" + key_id, map: {});
+    print(response.data.toString());
+    if (response.statusCode == 200) {
+      return response.data;
+    }
+    return ResponseError()
+      ..message = response.data['message'] ?? "Something went wrong";
+  }
 
   Future objective(
       {String? search, String? completed, String? due_range}) async {
     final response = await _getApi(
-      objectives,
+      allobjectives,
       map: {
         "search": search,
         "completed": completed,
@@ -141,6 +183,14 @@ class ApiProvider {
     }
     return ResponseError()
       ..message = response.data['message'] ?? "Something went wrong";
+  }
+
+  Future Currentteam() async {
+    final response = await _getApi(currentteam, map: {});
+    print(response.data.toString());
+    if (response.statusCode == 200) {
+      return response.data["data"]["all_users"];
+    }
   }
 
   Future<Response> _postWithFormData(
@@ -172,6 +222,7 @@ class ApiProvider {
   }
 
   Future fetchInviteList() async {}
+
   // final response = await _postWithFormData(fe, map)
 
   Future<Response> _putWithFormData(

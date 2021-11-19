@@ -18,6 +18,7 @@ class ObjectivePage extends StatefulHookWidget {
 
 class _ObjectivePageState extends State<ObjectivePage> {
   bool isLoading = false;
+
   @override
   @override
   Widget build(BuildContext context) {
@@ -27,18 +28,13 @@ class _ObjectivePageState extends State<ObjectivePage> {
         Container(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12),
-            child: Column(
-              children: [
-                ListView.builder(
-                  shrinkWrap: true,
-                  itemBuilder: (context, index) {
-                    return SingleObjectiveWidget(
-                        objective: _objectiveNotifier.objectivemodel[index]);
-                  },
-                  itemCount: _objectiveNotifier.objectivemodel.length,
-                ),
-                // SingleSrollableWidget(),
-              ],
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemBuilder: (context, index) {
+                return SingleObjectiveWidget(
+                    objective: _objectiveNotifier.objectivemodel[index]);
+              },
+              itemCount: _objectiveNotifier.objectivemodel.length,
             ),
           ),
         ),
@@ -67,8 +63,9 @@ class _ObjectivePageState extends State<ObjectivePage> {
   }
 }
 
-class SingleObjectiveWidget extends StatefulWidget {
+class SingleObjectiveWidget extends StatefulHookWidget {
   final ObjectiveModel objective;
+
   SingleObjectiveWidget({required this.objective, Key? key}) : super(key: key);
 
   @override
@@ -83,6 +80,7 @@ class _SingleObjectiveWidgetState extends State<SingleObjectiveWidget> {
     final size = MediaQuery.of(context).size;
     final textTheme = Theme.of(context).textTheme;
     final theme = Theme.of(context);
+    final provider = useProvider(objectiveprovider);
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
       elevation: 5,
@@ -248,8 +246,12 @@ class _SingleObjectiveWidgetState extends State<SingleObjectiveWidget> {
                                   color: Colors.white,
                                 ),
                                 onPressed: () {
+                                  context
+                                      .read(objectiveprovider)
+                                      .setCurrentObjective(widget.objective);
                                   Navigator.pushNamed(
-                                      context, PageRoutes.addObjective);
+                                      context, PageRoutes.addObjective,
+                                      arguments: true);
                                 },
                               ),
                               Flexible(
@@ -273,6 +275,9 @@ class _SingleObjectiveWidgetState extends State<SingleObjectiveWidget> {
                                 color: Colors.white,
                               ),
                               onPressed: () {
+                                context
+                                    .read(objectiveprovider)
+                                    .setCurrentObjective(widget.objective);
                                 Navigator.pushNamed(
                                     context, PageRoutes.addObjective,
                                     arguments: true);
@@ -294,7 +299,12 @@ class _SingleObjectiveWidgetState extends State<SingleObjectiveWidget> {
                                 Icons.delete_outlined,
                                 color: Colors.white,
                               ),
-                              onPressed: () {},
+                              onPressed: () {
+                              /*  context.read(objectiveprovider).deleteobject(
+                                    widget.objective.id.toString());*/
+                               provider.deleteobject(widget.objective.id.toString());
+                               provider.load();
+                              },
                             ),
                             Flexible(
                               child: Text(
