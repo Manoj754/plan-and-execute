@@ -230,6 +230,8 @@ class ApiProvider {
     FormData d = FormData.fromMap(map ?? {});
     return _dio.put(apiEnd, data: d);
   }
+
+  updateTeam() async {}
 }
 
 class CustomInterceptor extends InterceptorsWrapper {
