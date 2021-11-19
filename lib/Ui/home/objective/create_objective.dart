@@ -8,6 +8,7 @@ import 'package:plan_execute/Ui/components/edit_field.dart';
 import 'package:plan_execute/Ui/home/objective/rule_widget.dart';
 import 'package:plan_execute/Ui/signIn_page.dart';
 import 'package:plan_execute/constants/colors.dart';
+import 'package:plan_execute/data/models/member_model.dart';
 import 'package:plan_execute/data/models/rule_model.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:plan_execute/data/providers/providers.dart';
@@ -156,6 +157,7 @@ class PrimaryDetails extends StatefulWidget {
 }
 
 class _PrimaryDetailsState extends State<PrimaryDetails> {
+  List<MemberModel> members = [];
   dynamic currentObjectType = 1;
   dynamic currentAssignedMembder = 1;
   TextEditingController namecontroller = TextEditingController();
@@ -166,6 +168,10 @@ class _PrimaryDetailsState extends State<PrimaryDetails> {
       namecontroller.text = "Task 1";
       descriptioncontroller.text = "Do it fast";
       currentObjectType = 2;
+    }
+    members = context.read(teamProvider).currentMembers;
+    if (members.length > 0) {
+      currentAssignedMembder = members.first.id;
     }
 
     super.initState();
@@ -221,16 +227,23 @@ class _PrimaryDetailsState extends State<PrimaryDetails> {
             ),
             CustomDropDownButton(
               currentValue: currentAssignedMembder,
-              items: [
-                DropdownMenuItem(
-                  child: Text("Admin"),
-                  value: 1,
-                ),
-                DropdownMenuItem(
-                  child: Text("developer"),
-                  value: 2,
-                ),
-              ],
+              items: members
+                  .map((e) => DropdownMenuItem(
+                        child: Text(e.name),
+                        value: e.id,
+                      ))
+                  .toList(),
+              // items: [
+              //   DropdownMenuItem(
+              //     child: Text("Admin"),
+              //     value: 1,
+              //   ),
+              //   DropdownMenuItem(
+              //     child: Text("developer"),
+              //     value: 2,
+              //   ),
+              // ],
+
               radius: 10,
               onChanged: (v) {
                 currentAssignedMembder = v;

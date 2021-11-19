@@ -1,4 +1,5 @@
 const String baseUrl = "https://apipande.planandexecute.io/api";
+const String editTeam = "/edit-team";
 const String loginEnd = "/login";
 const String registerEnd = "/register";
 const String logoutEnd = "/logout";
@@ -9,3 +10,4 @@ const String inviteTeam = "/invite-team-member";
 const String objectives = "/all-objectives";
 const String createobjectives = "/create-objective";
 const String keyresult = "/keyresult";
+const String currentTeamMember = "/current-team-members";

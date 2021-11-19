@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:plan_execute/Ui/home/components/cutom_drawer.dart';
 import 'package:plan_execute/constants/colors.dart';
 import 'package:plan_execute/data/models/member_model.dart';
 
@@ -113,8 +112,8 @@ class _MemberExpansionState extends State<MemberExpansion> {
                                     padding: const EdgeInsets.all(1.0),
                                     child: CircleAvatar(
                                       radius: size.height * heightFactor * .6,
-                                      backgroundImage:
-                                          NetworkImage(members[index].profile),
+                                      backgroundImage: NetworkImage(
+                                          members[index].profilePhotoUrl),
                                     ),
                                   ),
                                 ),
@@ -137,7 +136,8 @@ class _MemberExpansionState extends State<MemberExpansion> {
                                     child: Padding(
                                       padding: const EdgeInsets.symmetric(
                                           vertical: 2, horizontal: 8),
-                                      child: Text(members[index].role,
+                                      child: Text("",
+                                          // members[index].membership.role,
                                           style: theme.textTheme.headline3!),
                                     ))
                               ],

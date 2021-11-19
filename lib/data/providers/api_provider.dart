@@ -180,7 +180,25 @@ class ApiProvider {
     return _dio.put(apiEnd, data: d);
   }
 
-  updateTeam() async {}
+  Future updateTeam(String name) async {
+    // final res = await _putWithFormData(editTeam, {'name': name});
+
+    final res = await _dio.put(editTeam,
+        data: {'name': name},
+        options: Options(contentType: 'application/x-www-form-urlencoded'));
+    if (res.statusCode == 200) {
+      return true;
+    }
+    return res.data['errors']['name'][0];
+  }
+
+  Future fetchCurrentMembers() async {
+    final res = await _getApi(currentTeamMember);
+    if (res.statusCode == 200) {
+      return res.data['data']['all_users'];
+    }
+    return ResponseError(message: "Something went wrong");
+  }
 }
 
 class CustomInterceptor extends InterceptorsWrapper {
@@ -192,7 +210,7 @@ class CustomInterceptor extends InterceptorsWrapper {
         "Authorization": "Bearer $token",
       };
     options.headers = {
-      "Authorization": "Bearer 53|Osbw5VlsZd2kyi7Mgvxp3GaArSPqc3N2jOukGJd5"
+      "Authorization": "Bearer 53|Osbw5VlsZd2kyi7Mgvxp3GaArSPqc3N2jOukGJd5",
     };
     return super.onRequest(options, handler);
   }

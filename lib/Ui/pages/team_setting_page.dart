@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/all.dart';
 import 'package:plan_execute/Ui/components/common_button.dart';
 import 'package:plan_execute/Ui/components/edit_field.dart';
 import 'package:plan_execute/Ui/signIn_page.dart';
+import 'package:plan_execute/Ui/utils.dart';
 import 'package:plan_execute/constants/colors.dart';
 import 'package:plan_execute/data/models/team_model.dart';
 import 'package:plan_execute/data/providers/providers.dart';
@@ -17,6 +18,7 @@ class TeamSettingPage extends StatefulWidget {
 
 class _TeamSettingPageState extends State<TeamSettingPage> {
   final teamNameController = TextEditingController();
+  bool isLoading = false;
   @override
   void initState() {
     teamNameController.text = widget.team.name;
@@ -111,9 +113,28 @@ class _TeamSettingPageState extends State<TeamSettingPage> {
                 height: 25,
               ),
               InkWell(
-                onTap: () {
-                  context.read(teamProvider).updateTeam(widget.team);
-                },
+                onTap: isLoading
+                    ? null
+                    : () async {
+                        if (teamNameController.text.length == 0) {
+                          showToast("Enter Team Name");
+                          return;
+                        }
+
+                        setState(() {
+                          isLoading = true;
+                        });
+
+                        final res = await context
+                            .read(teamProvider)
+                            .updateTeam(teamNameController.text);
+                        setState(() {
+                          isLoading = false;
+                        });
+                        if (res == true) {
+                          Navigator.pop(context);
+                        }
+                      },
                 child: Container(
                     width: double.infinity,
                     margin: EdgeInsets.symmetric(horizontal: 5),
@@ -124,7 +145,7 @@ class _TeamSettingPageState extends State<TeamSettingPage> {
                     ),
                     child: Center(
                         child: Text(
-                      "Save Team",
+                      isLoading ? "Loading.." : "Save Team",
                       style: TextStyle(color: Colors.white),
                     ))),
               ),

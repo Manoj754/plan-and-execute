@@ -1,14 +1,16 @@
 import 'package:plan_execute/Ui/utils.dart';
 import 'package:plan_execute/data/models/error_model.dart';
+import 'package:plan_execute/data/models/member_model.dart';
 import 'package:plan_execute/data/models/team_model.dart';
 import 'package:plan_execute/data/providers/base_notifier.dart';
 
 class TeamNotifier extends BaseNotifier {
   List<TeamModel> teamModel = [];
   TeamModel? currentTeam;
-
+  List<MemberModel> currentMembers = [];
   TeamNotifier() {
     load();
+    fecthCurrentMembers();
   }
 
   load() async {
@@ -67,7 +69,24 @@ class TeamNotifier extends BaseNotifier {
     apiProvider.fetchInviteList();
   }
 
-  Future<void> updateTeam(TeamModel team) async {
-    final res = await apiProvider.updateTeam();
+  Future<bool> updateTeam(String name) async {
+    final res = await apiProvider.updateTeam(name);
+    if (res is String) {
+      showToast(res);
+      return false;
+    }
+    currentTeam?.name = name;
+    notifyListeners();
+    showToast("Updated Successfully");
+    return true;
+  }
+
+  Future fecthCurrentMembers() async {
+    final res = await apiProvider.fetchCurrentMembers();
+    if (!(res is ResponseError)) {
+      currentMembers
+          .addAll((res as List).map((e) => MemberModel.fromJson(e)).toList());
+      notifyListeners();
+    }
   }
 }

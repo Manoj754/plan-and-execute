@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:plan_execute/constants/colors.dart';
 import 'package:plan_execute/data/models/team_model.dart';
 import 'package:plan_execute/data/providers/providers.dart';
@@ -16,7 +17,7 @@ showInviteBottomShit(BuildContext context, {TeamModel? teamModel}) {
       });
 }
 
-class InviteMembetBottomShit extends StatelessWidget {
+class InviteMembetBottomShit extends HookWidget {
   final TeamModel teamModel;
   const InviteMembetBottomShit({required this.teamModel, Key? key})
       : super(key: key);
@@ -24,6 +25,7 @@ class InviteMembetBottomShit extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context).textTheme;
+    final teamModel = useProvider(teamProvider).currentTeam;
     return Card(
       margin: EdgeInsets.all(0),
       shape: RoundedRectangleBorder(
@@ -41,7 +43,7 @@ class InviteMembetBottomShit extends StatelessWidget {
               children: [
                 CircleAvatar(
                   radius: 24,
-                  backgroundImage: NetworkImage(teamModel.url),
+                  backgroundImage: NetworkImage(teamModel!.url),
                 ),
                 const SizedBox(
                   width: 15,
@@ -93,7 +95,8 @@ class InviteMembetBottomShit extends StatelessWidget {
             ),
             InkWell(
               onTap: () {
-                Navigator.pushNamed(context, PageRoutes.teamSetting, arguments: teamModel);
+                Navigator.pushNamed(context, PageRoutes.teamSetting,
+                    arguments: teamModel);
               },
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 10),
@@ -113,26 +116,64 @@ class InviteMembetBottomShit extends StatelessWidget {
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10),
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.delete_outline,
-                  ),
-                  const SizedBox(
-                    width: 20,
-                  ),
-                  Text(
-                    "Delete team",
-                    style: theme.headline3!.copyWith(color: primaryColor),
-                  )
-                ],
+            InkWell(
+              onTap: () {
+                showConfrimDialog(context);
+              },
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.delete_outline,
+                    ),
+                    const SizedBox(
+                      width: 20,
+                    ),
+                    Text(
+                      "Delete team",
+                      style: theme.headline3!.copyWith(color: primaryColor),
+                    )
+                  ],
+                ),
               ),
             )
           ],
         ),
       ),
     );
+  }
+
+  showConfrimDialog(BuildContext context) async {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text(
+              "Are you sure?",
+              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
+            ),
+            actions: [
+              InkWell(
+                onTap: () {
+                  Navigator.pop(context, false);
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text("No"),
+                ),
+              ),
+              InkWell(
+                onTap: () {
+                  Navigator.pop(context, true);
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text("Yes"),
+                ),
+              )
+            ],
+          );
+        });
   }
 }
