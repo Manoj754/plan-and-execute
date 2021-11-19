@@ -1,6 +1,9 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:intl/intl.dart';
+import 'package:multiselect/multiselect.dart';
 import 'package:plan_execute/Ui/components/common_button.dart';
 import 'package:plan_execute/Ui/components/date_picker.dart';
 import 'package:plan_execute/Ui/components/drop_down_button.dart';
@@ -8,12 +11,16 @@ import 'package:plan_execute/Ui/components/edit_field.dart';
 import 'package:plan_execute/Ui/home/objective/rule_widget.dart';
 import 'package:plan_execute/Ui/signIn_page.dart';
 import 'package:plan_execute/constants/colors.dart';
+import 'package:plan_execute/data/models/currentteam_model.dart';
+import 'package:plan_execute/data/models/objectivemodel.dart';
 import 'package:plan_execute/data/models/rule_model.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:plan_execute/data/providers/objective_notifier.dart';
 import 'package:plan_execute/data/providers/providers.dart';
 
-class CreateObjective extends StatefulWidget {
+class CreateObjective extends StatefulHookWidget {
   final bool isEdit;
+
   CreateObjective({this.isEdit = false, Key? key}) : super(key: key);
 
   @override
@@ -24,17 +31,24 @@ class _CreateObjectiveState extends State<CreateObjective>
     with SingleTickerProviderStateMixin {
   late TabController controller;
 
+  ObjectiveModel? objectivemodel;
+
   @override
   void initState() {
     controller = TabController(length: 2, vsync: this);
     // controller.addListener(() {
     //   setState(() {});
     // });
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    objectivemodel = useProvider(objectiveprovider).currentObejctive;
+    /*context
+        .read(objectiveprovider)
+        .viewobjective(objectivemodel!.id.toString());*/
     return Container(
       decoration: backGroundDecoration,
       child: Scaffold(
@@ -100,6 +114,7 @@ class _CreateObjectiveState extends State<CreateObjective>
                 isExpanded: true,
                 radius: 0,
                 onTap: () {
+                  // context.read(objectiveprovider).createobjective("2", co, duedate, description)
                   Navigator.maybePop(context);
                 },
               ),
@@ -147,8 +162,9 @@ class _CreateObjectiveState extends State<CreateObjective>
 //   }
 // }
 
-class PrimaryDetails extends StatefulWidget {
+class PrimaryDetails extends StatefulHookWidget {
   final bool isEdit;
+
   PrimaryDetails({this.isEdit = false, Key? key}) : super(key: key);
 
   @override
@@ -158,21 +174,31 @@ class PrimaryDetails extends StatefulWidget {
 class _PrimaryDetailsState extends State<PrimaryDetails> {
   dynamic currentObjectType = 1;
   dynamic currentAssignedMembder = 1;
+  List<String> listOFSelectedItem = [];
+  String selectedText = "";
   TextEditingController namecontroller = TextEditingController();
   TextEditingController descriptioncontroller = TextEditingController();
+  ObjectiveModel? objectivemodel;
   @override
   void initState() {
-    if (widget.isEdit) {
-      namecontroller.text = "Task 1";
-      descriptioncontroller.text = "Do it fast";
-      currentObjectType = 2;
-    }
-
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    final _objectiveNotifier = useProvider(objectiveprovider);
+    final provider = useProvider(objectiveprovider);
+    if (widget.isEdit) {
+      /* */
+      objectivemodel = provider.currentObejctive;
+      // provider.viewobjective(objectivemodel!.id.toString());
+     /* context
+          .read(objectiveprovider)
+          .viewobjective(objectivemodel!.id.toString());*/
+      namecontroller.text = objectivemodel!.name;
+      descriptioncontroller.text = objectivemodel!.description;
+      currentObjectType = 2;
+    }
     final theme = Theme.of(context).textTheme;
     final lableStyle = theme.subtitle2!.copyWith(fontSize: 16);
     return Padding(
@@ -237,6 +263,47 @@ class _PrimaryDetailsState extends State<PrimaryDetails> {
                 setState(() {});
               },
             ),
+            /*  Container(
+          margin: EdgeInsets.only(top: 10.0),
+          decoration:
+          BoxDecoration(border: Border.all(color: Colors.white)),
+          child: ExpansionTile(
+            title: Text(
+              listOFSelectedItem.isEmpty ? "Select" : listOFSelectedItem[0],
+              style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.w400,
+                fontSize: 15.0,
+              ),
+            ),
+            children: <Widget>[
+              new ListView.builder(
+                physics: NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemCount:_objectiveNotifier.currentteammodel.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return Container(
+                    margin: EdgeInsets.only(bottom: 8.0),
+                    child: _ViewItem(
+                        item:_objectiveNotifier.currentteammodel[index],
+                        selected: (val) {
+                          selectedText = val;
+                          if (listOFSelectedItem.contains(val)) {
+                            listOFSelectedItem.remove(val);
+                          } else {
+                            listOFSelectedItem.add(val);
+                          }
+                          // widget.selectedList(listOFSelectedItem);
+                          setState(() {});
+                        },
+                        itemSelected: listOFSelectedItem
+                            .contains(_objectiveNotifier.currentteammodel[index].name)),
+                  );
+                },
+              ),
+            ],
+          ),
+        ),*/
             const SizedBox(
               height: 10,
             ),
@@ -279,17 +346,67 @@ class _PrimaryDetailsState extends State<PrimaryDetails> {
             ),
             CustomDatePicker(
               radius: 10,
-              date: DateTime.now(),
+              date: widget.isEdit ? formter(objectivemodel!.dueDate):DateTime.now(),
             )
           ],
         ),
       ),
     );
   }
+
+  DateTime formter(String dueDate) {
+    final DateFormat format = new DateFormat("yyyy-MM-dd");
+    return format.parse(dueDate);
+  }
 }
 
-class KeyRulesScreen extends StatefulWidget {
+class _ViewItem extends StatelessWidget {
+  Currentteam item;
+  bool itemSelected;
+  final Function(String) selected;
+
+  _ViewItem(
+      {required this.item, required this.itemSelected, required this.selected});
+
+  @override
+  Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size;
+    return Padding(
+      padding:
+          EdgeInsets.only(left: size.width * .032, right: size.width * .098),
+      child: Row(
+        children: [
+          SizedBox(
+            height: 24.0,
+            width: 24.0,
+            child: Checkbox(
+              value: itemSelected,
+              onChanged: (val) {
+                selected(item.name);
+              },
+              activeColor: primaryColor,
+            ),
+          ),
+          SizedBox(
+            width: size.width * .025,
+          ),
+          Text(
+            item.name,
+            style: TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.w400,
+              fontSize: 17.0,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class KeyRulesScreen extends StatefulHookWidget {
   final bool isEdit;
+
   const KeyRulesScreen({this.isEdit = false, Key? key}) : super(key: key);
 
   @override
@@ -297,8 +414,17 @@ class KeyRulesScreen extends StatefulWidget {
 }
 
 class _KeyRulesScreenState extends State<KeyRulesScreen> {
+  ObjectiveModel? objectiveModel;
+
   @override
   Widget build(BuildContext context) {
+    if (widget.isEdit) {
+
+      objectiveModel = useProvider(objectiveprovider).currentObejctive;
+      /*context
+          .read(objectiveprovider)
+          .viewobjective(objectiveModel!.id.toString());*/
+    }
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12),
       child: Column(
@@ -317,10 +443,14 @@ class _KeyRulesScreenState extends State<KeyRulesScreen> {
           const SizedBox(
             height: 20,
           ),
-          ListView(
+          objectiveModel!= null?ListView(
             shrinkWrap: true,
-            children: [...rules.map((e) => SingleRuleWidget(rule: e)).toList()],
-          ),
+            children: [
+              ...objectiveModel!.otherKeyResults
+                  .map((e) => SingleRuleWidget(rule: e))
+                  .toList()
+            ],
+          ): Container(),
           const SizedBox(
             height: 20,
           ),
@@ -339,9 +469,10 @@ class _KeyRulesScreenState extends State<KeyRulesScreen> {
   }
 }
 
-class RuleWidget extends StatefulWidget {
+class RuleWidget extends StatefulHookWidget {
   String text;
   String type;
+
   RuleWidget(this.text, this.type, {Key? key}) : super(key: key);
 
   @override
@@ -351,6 +482,8 @@ class RuleWidget extends StatefulWidget {
 class _RuleWidgetState extends State<RuleWidget> {
   TextEditingController ruleController = TextEditingController();
   DateTime? dueDate;
+ OtherKeyResults? keyResults;
+ ObjectiveModel? objectiveModel;
   @override
   void initState() {
     // TODO: implement initState
@@ -362,8 +495,12 @@ class _RuleWidgetState extends State<RuleWidget> {
 
   @override
   Widget build(BuildContext context) {
+    keyResults = context.read(objectiveprovider).currentkeyresult;
+    objectiveModel = context.read(objectiveprovider).currentObejctive;
+    final provider = useProvider(objectiveprovider);
     final theme = Theme.of(context).textTheme;
     final lableStyle = theme.subtitle2!.copyWith(fontSize: 16);
+
     return Dialog(
       insetPadding: EdgeInsets.symmetric(horizontal: 10),
       child: Padding(
@@ -445,14 +582,20 @@ class _RuleWidgetState extends State<RuleWidget> {
               onTap: () {
                 Navigator.pop(context);
                 if (widget.type == "add") {
-                  context
+                  print(objectiveModel.toString());
+                  /*context
                       .read(objectiveprovider)
-                      .keyaddrule("5", ruleController.text);
+                      .keyaddrule(objectiveModel!.id.toString(), ruleController.text);*/
+                  provider.keyaddrule(objectiveModel!.id.toString(), ruleController.text);
                 } else {
-                  context
+                  print(keyResults.toString());
+                  /*context
                       .read(objectiveprovider)
-                      .updatekeyrule("74", "1", ruleController.text);
+                      .updatekeyrule(keyResults!.id.toString(), "1", ruleController.text);
+*/
+                  provider.updatekeyrule(keyResults!.id.toString(), "1", ruleController.text);
                 }
+                provider.viewobjective(objectiveModel!.id.toString());
               },
               child: Container(
                 height: 40,
