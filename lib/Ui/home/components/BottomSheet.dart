@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:plan_execute/constants/colors.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:plan_execute/data/providers/objective_notifier.dart';
+import 'package:plan_execute/data/providers/providers.dart';
 
 void openBottomSheet(BuildContext context) {
   showModalBottomSheet(
+      isDismissible: false,
       backgroundColor: Colors.transparent,
       elevation: 10,
       context: context,
@@ -14,7 +18,9 @@ void openBottomSheet(BuildContext context) {
 class SortingValues {
   String title;
   int index;
-  SortingValues({required this.title, required this.index});
+  dynamic value;
+  SortingValues(
+      {required this.title, required this.index, required this.value});
 }
 
 class SortBotttomSheet extends StatefulWidget {
@@ -27,21 +33,30 @@ class SortBotttomSheet extends StatefulWidget {
 class _SortBotttomSheetState extends State<SortBotttomSheet> {
   int selectedStatus = 0;
   int selectedrange = 0;
+  dynamic selectedStatusvalue;
+  dynamic selectedrangevalue;
   List<SortingValues> byStatusList = [
-    SortingValues(title: 'Completed', index: 0),
-    SortingValues(title: 'Not Started', index: 1),
-    SortingValues(title: 'In-progress', index: 2),
-    SortingValues(title: 'Missed', index: 3),
+    SortingValues(title: 'Completed', index: 0, value: 1),
+    SortingValues(title: 'Not Started', index: 1, value: 0),
+    SortingValues(title: 'In-progress', index: 2, value: 2),
+    SortingValues(title: 'Missed', index: 3, value: 3),
   ];
   List<SortingValues> rangeList = [
-    SortingValues(title: 'Due in this week', index: 0),
-    SortingValues(title: 'Due in this month', index: 1),
-    SortingValues(title: 'Due in this quarter', index: 2),
-    SortingValues(title: 'Due in this year', index: 3),
+    SortingValues(title: 'Due in this week', index: 0, value: "week"),
+    SortingValues(title: 'Due in this month', index: 1, value: "month"),
+    SortingValues(title: 'Due in this quarter', index: 2, value: "quarter"),
+    SortingValues(title: 'Due in this year', index: 3, value: "year"),
   ];
   final double horPadding = 8;
   BorderRadius borderRadius = BorderRadius.circular(10);
   final horspace = 0.05;
+  @override
+  void initState() {
+    selectedStatus = context.read(objectiveprovider).selectedStatus;
+    selectedrange = context.read(objectiveprovider).selectedrange;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -143,6 +158,44 @@ class _SortBotttomSheetState extends State<SortBotttomSheet> {
                       ),
                     ],
                   ),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                InkWell(
+                  onTap: () {
+                    Navigator.pop(context);
+                    selectedStatusvalue = byStatusList[selectedStatus].value;
+                    selectedrangevalue = rangeList[selectedrange].value;
+                    print(" range" + selectedrangevalue.toString());
+                    print("status " + selectedStatusvalue.toString());
+                    context.read(objectiveprovider).load(
+                        completed: selectedStatus.toString(),
+                        due_range: selectedrange.toString());
+                    context.read(objectiveprovider)
+                      ..selectedrange = selectedrange
+                      ..selectedStatus = selectedStatus;
+                  },
+                  child: Container(
+                    alignment: Alignment.center,
+                    child: Card(
+                      shape: RoundedRectangleBorder(borderRadius: borderRadius),
+                      child: Container(
+                        decoration: BoxDecoration(
+                            borderRadius: borderRadius,
+                            color: Theme.of(context).primaryColor),
+                        padding:
+                            EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+                        width: (size.width * 0.8 / 2) - horPadding * 2,
+                        child: Center(
+                            child: Text(
+                          "Apply",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(color: Colors.white),
+                        )),
+                      ),
+                    ),
+                  ),
                 )
               ],
             ),
@@ -160,6 +213,7 @@ class _SortBotttomSheetState extends State<SortBotttomSheet> {
       onTap: () {
         setState(() {
           selectedStatus = sortingValues.index;
+          // selectedStatusvalue = sortingValues.value;
         });
       },
       child: statusButon(selectedStatus, sortingValues, size),
@@ -174,6 +228,7 @@ class _SortBotttomSheetState extends State<SortBotttomSheet> {
       onTap: () {
         setState(() {
           selectedrange = sortingValues.index;
+          // selectedrangevalue = sortingValues.value;
         });
       },
       child: statusButon(selectedrange, sortingValues, size),

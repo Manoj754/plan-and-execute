@@ -9,10 +9,13 @@ import 'package:plan_execute/data/providers/sp_helper.dart';
 
 class ApiProvider {
   static final ApiProvider _instance = ApiProvider.private();
+
   ApiProvider.private();
+
   factory ApiProvider() {
     return _instance;
   }
+
   // Dio _dio = Dio()..options.baseUrl = baseUrl;
   Dio _dio = Dio(
     BaseOptions(
@@ -20,6 +23,7 @@ class ApiProvider {
       validateStatus: (state) => true,
     ),
   )..interceptors.add(CustomInterceptor());
+
   Future login(String email, String password) async {
     // final response = http.post(Uri.parse(baseUrl + loginEnd),
     //     body: {'email': email, 'password': password});
@@ -80,12 +84,64 @@ class ApiProvider {
       ..message = response.data['message'] ?? "Something went wrong";
   }
 
+  Future addrule(String objective_id, String content) async {
+    final response = await _postWithFormData(
+      keyresult,
+      {"objective_id": objective_id, "content": content},
+    );
+    print(response.data);
+    if (response.statusCode == 200) {
+      return response.data['data'];
+    }
+    return ResponseError()
+      ..message = response.data['message'] ?? "Something went wrong";
+  }
+
+  Future updaterule(String key_id, String completed, String content) async {
+    final response = await _putWithFormData(
+      keyresult + "/" + key_id,
+      {"completed": completed, "content": content},
+    );
+    print("update " + response.data.toString());
+    if (response.statusCode == 200) {
+      print("update data " + response.data['data'].toString());
+      return response.data['data'];
+    }
+    return ResponseError()
+      ..message = response.data['message'] ?? "Something went wrong";
+  }
+
   Future logout() async {
     final response = await _postWithFormData(logoutEnd, {});
     print(response.data);
   }
 
   deletTeam(TeamModel model) {}
+
+  /*Future createobjective(String? userid,String? name,String? due_date,String? description,String? ) async{
+    final response = await _postWithFormData(createobjectives, {
+      "user_id": ,
+
+    })
+  }*/
+
+  Future objective(
+      {String? search, String? completed, String? due_range}) async {
+    final response = await _getApi(
+      objectives,
+      map: {
+        "search": search,
+        "completed": completed,
+        "due_range": due_range,
+      },
+    );
+    print(response.data.toString());
+    if (response.statusCode == 200) {
+      return response.data['data']['objectives']['data'];
+    }
+    return ResponseError()
+      ..message = response.data['message'] ?? "Something went wrong";
+  }
 
   Future<Response> _postWithFormData(
       String apiEnd, Map<String, dynamic>? map) async {
@@ -115,8 +171,13 @@ class ApiProvider {
     return ResponseError(message: response.data['message']);
   }
 
-  Future fetchInviteList() async {
-    // final response = await _postWithFormData(fe, map)
+  Future fetchInviteList() async {}
+  // final response = await _postWithFormData(fe, map)
+
+  Future<Response> _putWithFormData(
+      String apiEnd, Map<String, dynamic>? map) async {
+    FormData d = FormData.fromMap(map ?? {});
+    return _dio.put(apiEnd, data: d);
   }
 }
 
