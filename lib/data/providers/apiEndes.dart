@@ -6,4 +6,6 @@ const String myTeamsEnd = "/my-teams";
 const String createTeamEnd = "/create-team";
 const String swicthTeamEnd = "/switch-team";
 const String inviteTeam = "/invite-team-member";
-const String editTeam = "/edit-team";
+const String objectives = "/all-objectives";
+const String createobjectives = "/create-objective";
+const String keyresult = "/keyresult";

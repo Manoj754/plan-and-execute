@@ -33,6 +33,7 @@ class PageRoutes {
   static const String teamSetting = "/teamSetting";
   static const String chatNotification = "/chatNotification";
   static const String showObjective = "/showObjective";
+  // static const String allobjective = "/all-objectives";
   static const String authWrapper = "/";
   static Route<dynamic>? routeGenerator(RouteSettings settings) {
     Widget widget;

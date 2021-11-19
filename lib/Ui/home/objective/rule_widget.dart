@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:plan_execute/data/models/rule_model.dart';
 
+import 'create_objective.dart';
+
 class SingleRuleWidget extends StatelessWidget {
   final RuleModel rule;
   const SingleRuleWidget({Key? key, required this.rule}) : super(key: key);
@@ -21,9 +23,14 @@ class SingleRuleWidget extends StatelessWidget {
                   style: theme.bodyText2,
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(4.0),
-                child: Icon(Icons.edit_outlined),
+              InkWell(
+                onTap: () {
+                  showAddRuleDialog(rule.name, "update", context);
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: Icon(Icons.edit_outlined),
+                ),
               ),
               const SizedBox(
                 width: 10,
@@ -39,5 +46,14 @@ class SingleRuleWidget extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  showAddRuleDialog(String text, String type, BuildContext context) async {
+    final res = await showDialog(
+        context: context,
+        builder: (context) {
+          return RuleWidget(text, type);
+        });
+    print(res);
   }
 }

@@ -9,6 +9,8 @@ import 'package:plan_execute/Ui/home/objective/rule_widget.dart';
 import 'package:plan_execute/Ui/signIn_page.dart';
 import 'package:plan_execute/constants/colors.dart';
 import 'package:plan_execute/data/models/rule_model.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:plan_execute/data/providers/providers.dart';
 
 class CreateObjective extends StatefulWidget {
   final bool isEdit;
@@ -57,7 +59,7 @@ class _CreateObjectiveState extends State<CreateObjective>
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Text("Key Rules"),
+                          Text("Key Result"),
                           const SizedBox(
                             width: 10,
                           ),
@@ -308,7 +310,9 @@ class _KeyRulesScreenState extends State<KeyRulesScreen> {
             isExpanded: true,
             radius: 10,
             label: "ADD RULE",
-            onTap: showAddRuleDialog,
+            onTap: () {
+              showAddRuleDialog("", "add");
+            },
           ),
           const SizedBox(
             height: 20,
@@ -325,18 +329,20 @@ class _KeyRulesScreenState extends State<KeyRulesScreen> {
     );
   }
 
-  showAddRuleDialog() async {
+  showAddRuleDialog(String text, String type) async {
     final res = await showDialog(
         context: context,
         builder: (context) {
-          return RuleWidget();
+          return RuleWidget(text, type);
         });
     print(res);
   }
 }
 
 class RuleWidget extends StatefulWidget {
-  RuleWidget({Key? key}) : super(key: key);
+  String text;
+  String type;
+  RuleWidget(this.text, this.type, {Key? key}) : super(key: key);
 
   @override
   _RuleWidgetState createState() => _RuleWidgetState();
@@ -345,6 +351,15 @@ class RuleWidget extends StatefulWidget {
 class _RuleWidgetState extends State<RuleWidget> {
   TextEditingController ruleController = TextEditingController();
   DateTime? dueDate;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    if (widget.text != "") {
+      ruleController.text = widget.text;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context).textTheme;
@@ -396,7 +411,7 @@ class _RuleWidgetState extends State<RuleWidget> {
             // const SizedBox(
             //   height: 10,
             // ),
-            CustomDatePicker(
+            /* CustomDatePicker(
               radius: 10,
               onDateChange: (d) {
                 dueDate = d;
@@ -404,7 +419,7 @@ class _RuleWidgetState extends State<RuleWidget> {
             ),
             const SizedBox(
               height: 10,
-            ),
+            ),*/
             // Align(
             //   alignment: Alignment.centerRight,
             //   child: InkWell(
@@ -429,6 +444,15 @@ class _RuleWidgetState extends State<RuleWidget> {
             InkWell(
               onTap: () {
                 Navigator.pop(context);
+                if (widget.type == "add") {
+                  context
+                      .read(objectiveprovider)
+                      .keyaddrule("5", ruleController.text);
+                } else {
+                  context
+                      .read(objectiveprovider)
+                      .updatekeyrule("74", "1", ruleController.text);
+                }
               },
               child: Container(
                 height: 40,

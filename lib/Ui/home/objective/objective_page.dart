@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:plan_execute/constants/colors.dart';
-import 'package:plan_execute/data/models/objective_model.dart';
-import 'package:plan_execute/routes/routes.dart';
 
-class ObjectivePage extends StatefulWidget {
+import 'package:plan_execute/data/models/objectivemodel.dart';
+import 'package:plan_execute/data/providers/AuthNotifier.dart';
+import 'package:plan_execute/data/providers/objective_notifier.dart';
+import 'package:plan_execute/data/providers/providers.dart';
+import 'package:plan_execute/routes/routes.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+
+class ObjectivePage extends StatefulHookWidget {
   const ObjectivePage({Key? key}) : super(key: key);
 
   @override
@@ -11,8 +17,11 @@ class ObjectivePage extends StatefulWidget {
 }
 
 class _ObjectivePageState extends State<ObjectivePage> {
+  bool isLoading = false;
+  @override
   @override
   Widget build(BuildContext context) {
+    final _objectiveNotifier = useProvider(objectiveprovider);
     return Stack(
       children: [
         Container(
@@ -23,9 +32,10 @@ class _ObjectivePageState extends State<ObjectivePage> {
                 ListView.builder(
                   shrinkWrap: true,
                   itemBuilder: (context, index) {
-                    return SingleObjectiveWidget(objective: objectives[0]);
+                    return SingleObjectiveWidget(
+                        objective: _objectiveNotifier.objectivemodel[index]);
                   },
-                  itemCount: 5,
+                  itemCount: _objectiveNotifier.objectivemodel.length,
                 ),
                 // SingleSrollableWidget(),
               ],
@@ -67,6 +77,7 @@ class SingleObjectiveWidget extends StatefulWidget {
 
 class _SingleObjectiveWidgetState extends State<SingleObjectiveWidget> {
   bool isOpen = false;
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -106,10 +117,10 @@ class _SingleObjectiveWidgetState extends State<SingleObjectiveWidget> {
                           borderRadius: BorderRadius.circular(6)),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(5),
-                        child: Image.network(
-                          objectives[0].profile,
+                        /*child: Image.network(
+                          "objectives."profile,
                           fit: BoxFit.cover,
-                        ),
+                        ),*/
                       ),
                     ),
                     const SizedBox(
@@ -120,13 +131,13 @@ class _SingleObjectiveWidgetState extends State<SingleObjectiveWidget> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(widget.objective.member,
-                              style: textTheme.bodyText2),
                           Text(widget.objective.name,
+                              style: textTheme.bodyText2),
+                          Text(widget.objective.description,
                               style:
                                   textTheme.subtitle1!.copyWith(fontSize: 16)),
                           Text(
-                            widget.objective.expires,
+                            widget.objective.dueDate,
                             style: textTheme.subtitle2,
                           ),
                         ],
@@ -142,7 +153,7 @@ class _SingleObjectiveWidgetState extends State<SingleObjectiveWidget> {
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Text(
-                              '${widget.objective.completedTask}/${widget.objective.totalResult}',
+                              '0/3',
                               style:
                                   textTheme.headline3!.copyWith(fontSize: 12),
                             ),
