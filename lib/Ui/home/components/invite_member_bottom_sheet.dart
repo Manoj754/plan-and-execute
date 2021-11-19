@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:plan_execute/constants/colors.dart';
 import 'package:plan_execute/data/models/team_model.dart';
+import 'package:plan_execute/data/providers/providers.dart';
 import 'package:plan_execute/routes/routes.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-showInviteBottomShit(BuildContext context, TeamModel teamModel) {
+showInviteBottomShit(BuildContext context, {TeamModel? teamModel}) {
   showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
       elevation: 10,
       builder: (context) {
-        return InviteMembetBottomShit(teamModel: teamModel);
+        return InviteMembetBottomShit(
+            teamModel: context.read(teamProvider).currentTeam!);
       });
 }
 
@@ -69,6 +72,7 @@ class InviteMembetBottomShit extends StatelessWidget {
             ),
             InkWell(
               onTap: () {
+                // Navigator.pop(context);
                 Navigator.pushNamed(context, PageRoutes.inviteMemberPage);
               },
               child: Padding(

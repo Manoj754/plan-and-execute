@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:plan_execute/Ui/components/edit_field.dart';
 import 'package:plan_execute/Ui/signIn_page.dart';
+import 'package:plan_execute/Ui/utils.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:plan_execute/data/providers/providers.dart';
 
 class InviteMemberPage extends StatefulWidget {
   @override
@@ -8,8 +11,9 @@ class InviteMemberPage extends StatefulWidget {
 }
 
 class InviteMemberPageState extends State<InviteMemberPage> {
-  int _value = -1;
-  int currentindex = 0;
+  int currentindex = 2;
+  bool isLoading = false;
+  final emailController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -43,23 +47,35 @@ class InviteMemberPageState extends State<InviteMemberPage> {
             ),
           ),
           actions: [
-            Container(
-              margin: EdgeInsets.only(right: 10),
-              child: Row(
-                children: [
-                  Text(
-                    "Send",
-                    style: theme.headline2!.copyWith(fontSize: 16),
-                  ),
-                  SizedBox(
-                    width: 8,
-                  ),
-                  Icon(
-                    Icons.send,
-                    size: 20,
-                    color: Colors.black,
-                  ),
-                ],
+            InkWell(
+              onTap: sendInvitation,
+              child: Container(
+                margin: EdgeInsets.only(right: 10),
+                child: Row(
+                  children: [
+                    Text(
+                      "Send",
+                      style: theme.headline2!.copyWith(fontSize: 16),
+                    ),
+                    SizedBox(
+                      width: 8,
+                    ),
+                    if (!isLoading)
+                      Icon(
+                        Icons.send,
+                        size: 20,
+                        color: Colors.black,
+                      ),
+                    if (isLoading)
+                      Container(
+                        width: 25,
+                        height: 25,
+                        child: CircularProgressIndicator(
+                          color: Colors.black,
+                        ),
+                      )
+                  ],
+                ),
               ),
             )
           ],
@@ -85,6 +101,7 @@ class InviteMemberPageState extends State<InviteMemberPage> {
                   height: 15,
                 ),
                 EditField(
+                  controller: emailController,
                   leading: Icons.email_outlined,
                   hint: "Add an Email Address",
                 ),
@@ -200,6 +217,41 @@ class InviteMemberPageState extends State<InviteMemberPage> {
         ),
       ),
     );
+  }
+
+  String get role {
+    switch (currentindex) {
+      case 0:
+        return 'super_admin';
+      case 1:
+        return 'admin';
+      case 2:
+        return "team_members";
+      default:
+        return "";
+    }
+  }
+
+  sendInvitation() async {
+    if (!isLoading) {
+      if (!emailValidate(emailController.text)) {
+        showToast("Enter valid email");
+
+        return;
+      }
+      setState(() {
+        isLoading = true;
+      });
+      final res = await context
+          .read(teamProvider)
+          .invitTeamMember(emailController.text, role);
+      setState(() {
+        isLoading = false;
+      });
+      if (res) {
+        emailController.clear();
+      }
+    }
   }
 }
 

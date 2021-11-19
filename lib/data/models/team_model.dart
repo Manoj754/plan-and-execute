@@ -22,6 +22,9 @@ class TeamModel {
     id = json['id'] ?? 0;
     userId = json['user_id'] ?? 0;
     name = json['name'] ?? "";
+    email = "email@email.com";
+    url =
+        "https://images.unsplash.com/photo-1633114129669-78b1ff09902b?ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1470&q=80";
     personalTeam = json['personal_team'] ?? false;
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
@@ -37,6 +40,12 @@ class TeamModel {
     data['updated_at'] = this.updatedAt;
     return data;
   }
+
+  @override
+  bool operator ==(other) => (other is TeamModel) && (other.id == this.id);
+
+  @override
+  int get hashCode => this.id;
 }
 
 // class TeamModel {

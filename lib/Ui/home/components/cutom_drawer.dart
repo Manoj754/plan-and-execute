@@ -58,7 +58,8 @@ class _CustomDrawerState extends State<CustomDrawer> {
                 Expanded(
                   child: ListView.builder(
                     itemBuilder: (context, index) {
-                      return SingleTeamWidget(teamModel: teams[index]);
+                      return SingleTeamWidget(
+                          teamModel: teamNotifier.teamModel[index]);
                     },
                     itemCount: teamNotifier.teamModel.length,
                   ),
@@ -133,48 +134,60 @@ class SingleTeamWidget extends StatelessWidget {
     return Card(
       shadowColor: primaryColor,
       elevation: 10,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-      child: Container(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 15),
-          child: Row(
-            children: [
-              CircleAvatar(
-                radius: 24,
-                backgroundImage: NetworkImage(teamModel.url),
-              ),
-              const SizedBox(
-                width: 15,
-              ),
-              Expanded(
-                child: Column(
-                  // mainAxisAlignment: MainAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.max,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      teamModel.name,
-                      overflow: TextOverflow.ellipsis,
-                      style: theme.headline2,
-                    ),
-                    Text(
-                      teamModel.email,
-                      overflow: TextOverflow.ellipsis,
-                      style: theme.subtitle1,
-                    ),
-                  ],
+      shape: RoundedRectangleBorder(
+        side: BorderSide(
+            color: context.read(teamProvider).currentTeam == teamModel
+                ? Colors.green
+                : Colors.transparent),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: InkWell(
+        onTap: () {
+          context.read(teamProvider).setCurrentTeam(teamModel);
+        },
+        child: Container(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 15),
+            child: Row(
+              children: [
+                CircleAvatar(
+                  radius: 24,
+                  backgroundImage: NetworkImage(teamModel.url),
                 ),
-              ),
-              InkWell(
-                onTap: () {
-                  showInviteBottomShit(context, teamModel);
-                },
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Icon(Icons.more_vert),
+                const SizedBox(
+                  width: 15,
                 ),
-              ),
-            ],
+                Expanded(
+                  child: Column(
+                    // mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.max,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        teamModel.name,
+                        overflow: TextOverflow.ellipsis,
+                        style: theme.headline2,
+                      ),
+                      Text(
+                        teamModel.email,
+                        overflow: TextOverflow.ellipsis,
+                        style: theme.subtitle1,
+                      ),
+                    ],
+                  ),
+                ),
+                // if (context.read(teamProvider).currentTeam == teamModel)
+                //   InkWell(
+                //     onTap: () {
+                //       showInviteBottomShit(context);
+                //     },
+                //     child: Padding(
+                //       padding: const EdgeInsets.all(8.0),
+                //       child: Icon(Icons.more_vert),
+                //     ),
+                //   ),
+              ],
+            ),
           ),
         ),
       ),

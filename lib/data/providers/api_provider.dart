@@ -1,5 +1,8 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 import 'package:plan_execute/data/models/error_model.dart';
+import 'package:plan_execute/data/models/team_model.dart';
 import 'package:plan_execute/data/models/user_model.dart';
 import 'package:plan_execute/data/providers/apiEndes.dart';
 import 'package:plan_execute/data/providers/sp_helper.dart';
@@ -31,6 +34,18 @@ class ApiProvider {
         message: res.data['message'],
       );
     }
+  }
+
+  Future createTeam(String name) async {
+    final res = await _postWithFormData(createTeamEnd, {
+      'name': name,
+    });
+    if (res.statusCode == 200) {
+      log(res.data.toString());
+      return res.data['data'];
+    }
+    log(res.data.toString());
+    return ResponseError(message: res.data['errors']?['name']?[0] ?? "");
   }
 
   Future getMyAllTeam() async {
@@ -70,10 +85,38 @@ class ApiProvider {
     print(response.data);
   }
 
+  deletTeam(TeamModel model) {}
+
   Future<Response> _postWithFormData(
       String apiEnd, Map<String, dynamic>? map) async {
     FormData d = FormData.fromMap(map ?? {});
     return _dio.post(apiEnd, data: d);
+  }
+
+  ///// team ///////////
+  Future switchTeam(TeamModel teamModel) async {
+    final response =
+        await _postWithFormData(swicthTeamEnd, {'team_id': teamModel.id});
+    if (response.statusCode == 200) {
+      log(response.data.toString());
+      return;
+    }
+    log(response.data.toString());
+  }
+
+  /////////////// manage Members ////////////
+  Future inviteMember(String s, String role) async {
+    final response =
+        await _postWithFormData(inviteTeam, {'email': s, 'role': role});
+    log(response.data.toString());
+    if (response.statusCode == 200) {
+      return response.data['message'];
+    }
+    return ResponseError(message: response.data['message']);
+  }
+
+  Future fetchInviteList() async {
+    // final response = await _postWithFormData(fe, map)
   }
 }
 
