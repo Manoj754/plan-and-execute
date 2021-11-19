@@ -118,6 +118,8 @@ class ApiProvider {
   Future fetchInviteList() async {
     // final response = await _postWithFormData(fe, map)
   }
+
+  updateTeam() async {}
 }
 
 class CustomInterceptor extends InterceptorsWrapper {

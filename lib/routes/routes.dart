@@ -17,6 +17,7 @@ import 'package:plan_execute/Ui/pages/notification_setting.dart';
 import 'package:plan_execute/Ui/pages/privacy_policy.dart';
 import 'package:plan_execute/Ui/pages/team_setting_page.dart';
 import 'package:plan_execute/Ui/signIn_page.dart';
+import 'package:plan_execute/data/models/team_model.dart';
 
 class PageRoutes {
   static const String homeScreen = "/homeScreen";
@@ -76,7 +77,7 @@ class PageRoutes {
         widget = PrivacyPolicy();
         break;
       case teamSetting:
-        widget = TeamSettingPage();
+        widget = TeamSettingPage(settings.arguments as TeamModel);
         break;
 
       case chatNotification:

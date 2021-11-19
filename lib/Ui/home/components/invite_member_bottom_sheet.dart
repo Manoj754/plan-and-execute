@@ -93,7 +93,7 @@ class InviteMembetBottomShit extends StatelessWidget {
             ),
             InkWell(
               onTap: () {
-                Navigator.pushNamed(context, PageRoutes.teamSetting);
+                Navigator.pushNamed(context, PageRoutes.teamSetting, arguments: teamModel);
               },
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 10),

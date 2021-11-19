@@ -66,4 +66,8 @@ class TeamNotifier extends BaseNotifier {
   Future fetchInviteList() async {
     apiProvider.fetchInviteList();
   }
+
+  Future<void> updateTeam(TeamModel team) async {
+    final res = await apiProvider.updateTeam();
+  }
 }
