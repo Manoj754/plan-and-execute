@@ -204,7 +204,7 @@ class _PrimaryDetailsState extends State<PrimaryDetails> {
       /* */
       objectivemodel = provider.currentObejctive;
       // provider.viewobjective(objectivemodel!.id.toString());
-     /* context
+      /* context
           .read(objectiveprovider)
           .viewobjective(objectivemodel!.id.toString());*/
       namecontroller.text = objectivemodel!.name;
@@ -282,47 +282,48 @@ class _PrimaryDetailsState extends State<PrimaryDetails> {
                 setState(() {});
               },
             ),
-            /*  Container(
-          margin: EdgeInsets.only(top: 10.0),
-          decoration:
-          BoxDecoration(border: Border.all(color: Colors.white)),
-          child: ExpansionTile(
-            title: Text(
-              listOFSelectedItem.isEmpty ? "Select" : listOFSelectedItem[0],
-              style: TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.w400,
-                fontSize: 15.0,
+            Container(
+              margin: EdgeInsets.only(top: 10.0),
+              decoration:
+                  BoxDecoration(border: Border.all(color: Colors.white)),
+              child: ExpansionTile(
+                title: Text(
+                  listOFSelectedItem.isEmpty ? "Select" : listOFSelectedItem[0],
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.w400,
+                    fontSize: 15.0,
+                  ),
+                ),
+                children: <Widget>[
+                  new ListView.builder(
+                    physics: NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: _objectiveNotifier.currentteammodel.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Container(
+                        margin: EdgeInsets.only(bottom: 8.0),
+                        child: _ViewItem(
+                            item: _objectiveNotifier.currentteammodel[index],
+                            selected: (val) {
+                              selectedText = val;
+                              if (listOFSelectedItem.contains(val)) {
+                                listOFSelectedItem.remove(val);
+                              } else {
+                                listOFSelectedItem.add(val);
+                              }
+                              // widget.selectedList(listOFSelectedItem);
+                              setState(() {});
+                            },
+                            itemSelected: listOFSelectedItem.contains(
+                                _objectiveNotifier
+                                    .currentteammodel[index].name)),
+                      );
+                    },
+                  ),
+                ],
               ),
             ),
-            children: <Widget>[
-              new ListView.builder(
-                physics: NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount:_objectiveNotifier.currentteammodel.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return Container(
-                    margin: EdgeInsets.only(bottom: 8.0),
-                    child: _ViewItem(
-                        item:_objectiveNotifier.currentteammodel[index],
-                        selected: (val) {
-                          selectedText = val;
-                          if (listOFSelectedItem.contains(val)) {
-                            listOFSelectedItem.remove(val);
-                          } else {
-                            listOFSelectedItem.add(val);
-                          }
-                          // widget.selectedList(listOFSelectedItem);
-                          setState(() {});
-                        },
-                        itemSelected: listOFSelectedItem
-                            .contains(_objectiveNotifier.currentteammodel[index].name)),
-                  );
-                },
-              ),
-            ],
-          ),
-        ),*/
             const SizedBox(
               height: 10,
             ),
@@ -365,7 +366,9 @@ class _PrimaryDetailsState extends State<PrimaryDetails> {
             ),
             CustomDatePicker(
               radius: 10,
-              date: widget.isEdit ? formter(objectivemodel!.dueDate):DateTime.now(),
+              date: widget.isEdit
+                  ? formter(objectivemodel!.dueDate)
+                  : DateTime.now(),
             )
           ],
         ),
@@ -438,7 +441,6 @@ class _KeyRulesScreenState extends State<KeyRulesScreen> {
   @override
   Widget build(BuildContext context) {
     if (widget.isEdit) {
-
       objectiveModel = useProvider(objectiveprovider).currentObejctive;
       /*context
           .read(objectiveprovider)
@@ -462,14 +464,16 @@ class _KeyRulesScreenState extends State<KeyRulesScreen> {
           const SizedBox(
             height: 20,
           ),
-          objectiveModel!= null?ListView(
-            shrinkWrap: true,
-            children: [
-              ...objectiveModel!.otherKeyResults
-                  .map((e) => SingleRuleWidget(rule: e))
-                  .toList()
-            ],
-          ): Container(),
+          objectiveModel != null
+              ? ListView(
+                  shrinkWrap: true,
+                  children: [
+                    ...objectiveModel!.otherKeyResults
+                        .map((e) => SingleRuleWidget(rule: e))
+                        .toList()
+                  ],
+                )
+              : Container(),
           const SizedBox(
             height: 20,
           ),
@@ -501,8 +505,8 @@ class RuleWidget extends StatefulHookWidget {
 class _RuleWidgetState extends State<RuleWidget> {
   TextEditingController ruleController = TextEditingController();
   DateTime? dueDate;
- OtherKeyResults? keyResults;
- ObjectiveModel? objectiveModel;
+  OtherKeyResults? keyResults;
+  ObjectiveModel? objectiveModel;
   @override
   void initState() {
     // TODO: implement initState
@@ -605,14 +609,16 @@ class _RuleWidgetState extends State<RuleWidget> {
                   /*context
                       .read(objectiveprovider)
                       .keyaddrule(objectiveModel!.id.toString(), ruleController.text);*/
-                  provider.keyaddrule(objectiveModel!.id.toString(), ruleController.text);
+                  provider.keyaddrule(
+                      objectiveModel!.id.toString(), ruleController.text);
                 } else {
                   print(keyResults.toString());
                   /*context
                       .read(objectiveprovider)
                       .updatekeyrule(keyResults!.id.toString(), "1", ruleController.text);
 */
-                  provider.updatekeyrule(keyResults!.id.toString(), "1", ruleController.text);
+                  provider.updatekeyrule(
+                      keyResults!.id.toString(), "1", ruleController.text);
                 }
                 provider.viewobjective(objectiveModel!.id.toString());
               },
