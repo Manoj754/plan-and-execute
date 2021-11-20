@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:plan_execute/Ui/components/common_button.dart';
 import 'package:plan_execute/Ui/components/edit_field.dart';
 import 'package:plan_execute/Ui/signIn_page.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:plan_execute/data/models/user_model.dart';
+import 'package:plan_execute/data/providers/providers.dart';
 
-class EditProfilePage extends StatefulWidget {
+class EditProfilePage extends StatefulHookWidget {
   EditProfilePage({Key? key}) : super(key: key);
 
   @override
@@ -13,15 +17,21 @@ class EditProfilePage extends StatefulWidget {
 class _EditProfilePageState extends State<EditProfilePage> {
   TextEditingController emailController = TextEditingController();
   TextEditingController nameController = TextEditingController();
+
+  UserData? profiledata;
   @override
   void initState() {
-    emailController.text = "abc@gmail.com";
-    nameController.text = "Manoj kargar";
+    profiledata = context.read(authProvider).userData;
+    if(profiledata != null) {
+      emailController.text =profiledata!.email;
+      nameController.text = profiledata!.name;
+    }
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    final provider = useProvider(authProvider);
     return Container(
       decoration: backGroundDecoration,
       child: Scaffold(
@@ -71,6 +81,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       Center(
                         child: CommonButton(
                           onTap: () {
+                            print("name " + nameController.text + "email " + emailController.text );
+                            provider.updateprofile(nameController.text, emailController.text);
                             Navigator.maybePop(context);
                           },
                           label: "SUBMIT",

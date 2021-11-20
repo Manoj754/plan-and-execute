@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
+import 'package:plan_execute/Ui/utils.dart';
 import 'package:plan_execute/data/models/error_model.dart';
 import 'package:plan_execute/data/models/team_model.dart';
 import 'package:plan_execute/data/models/user_model.dart';
@@ -39,6 +40,19 @@ class ApiProvider {
       );
     }
   }
+  Future updateprofiles(String email, String name) async {
+
+    final res = await _putWithFormData(
+        update_profile, {'name': name, 'email': email});
+    print(res.data.toString());
+    if (res.statusCode == 200) {
+      return res.data;
+    } else {
+      return ResponseError(
+        message: res.data['message'],
+      );
+    }
+  }
 
   Future createTeam(String name) async {
     final res = await _postWithFormData(createTeamEnd, {
@@ -50,6 +64,18 @@ class ApiProvider {
     }
     log(res.data.toString());
     return ResponseError(message: res.data['errors']?['name']?[0] ?? "");
+  }
+
+  Future userprofile() async {
+    final res = await _postWithFormData(me, {});
+    if (res.statusCode == 200) {
+      log(res.data.toString());
+      return UserData.fromJson(res.data);
+    } else {
+      return ResponseError(
+        message: res.data['message'],
+      );
+    }
   }
 
   Future getMyAllTeam() async {
