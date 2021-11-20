@@ -24,14 +24,14 @@ class ObjectiveModel {
 
   ObjectiveModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    userId = json['user_id'];
+    userId = int.parse(json['user_id'].toString());
     teamId = json['team_id'];
     name = json['name'];
     description = json['description'];
     dueDate = json['due_date'];
     keyResults = json['key_results'];
     editByUser = json['edit_by_user'];
-    allowedUsers = json['allowed_users'];
+    allowedUsers = json['allowed_users'].toString();
     parentId = json['parent_id'];
     completedNote = json['completed_note'];
     completed = json['completed'];
@@ -42,7 +42,7 @@ class ObjectiveModel {
     completedAt = json['completed_at'] != null ? json['completed_at'] : "";
     deletedAt = json['deleted_at'] != null ? json['completed_at'] : "";
     status = json['status'];
-    completedKeyResultCount = json['completed_key_result_count'];
+    completedKeyResultCount = json['completed_key_result_count'] ?? 0;
     /*if (json['sub_objectives'] != null) {
       subObjectives = new List<Null>();
       json['sub_objectives'].forEach((v) {

@@ -28,6 +28,7 @@ class MyApp extends StatelessWidget {
       title: 'Plan and Excecute',
 
       theme: ThemeData(
+          fontFamily: 'Quicksand',
           primarySwatch: MaterialColor(0xff3610ef, primaryColors),
           accentColor: primaryColor,
           dividerColor: Colors.transparent,

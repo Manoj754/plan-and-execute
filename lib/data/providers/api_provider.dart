@@ -123,11 +123,14 @@ class ApiProvider {
   deletTeam(TeamModel model) {}
 
   Future createobjective(String userid, String name, String due_date,
-      String description, Map allowuser) async {
+      String description, List<int> allowuser) async {
     final response = await _postWithFormData(createobjectives, {
       "user_id": userid,
       "name": name,
       "description": description,
+      'due_date': due_date,
+      for (int a = 0; a < allowuser.length; a++)
+        'allowed_users[$a]': allowuser[a],
     });
     print(response.data.toString());
     if (response.statusCode == 200) {

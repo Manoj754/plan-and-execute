@@ -10,12 +10,14 @@ import 'package:plan_execute/Ui/components/drop_down_button.dart';
 import 'package:plan_execute/Ui/components/edit_field.dart';
 import 'package:plan_execute/Ui/home/objective/rule_widget.dart';
 import 'package:plan_execute/Ui/signIn_page.dart';
+import 'package:plan_execute/Ui/utils.dart';
 import 'package:plan_execute/constants/colors.dart';
 import 'package:plan_execute/data/models/member_model.dart';
 import 'package:plan_execute/data/models/currentteam_model.dart';
 import 'package:plan_execute/data/models/objectivemodel.dart';
 import 'package:plan_execute/data/models/rule_model.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:plan_execute/data/providers/apiEndes.dart';
 import 'package:plan_execute/data/providers/objective_notifier.dart';
 import 'package:plan_execute/data/providers/providers.dart';
 
@@ -31,12 +33,23 @@ class CreateObjective extends StatefulHookWidget {
 class _CreateObjectiveState extends State<CreateObjective>
     with SingleTickerProviderStateMixin {
   late TabController controller;
-
   ObjectiveModel? objectivemodel;
+  bool isObjectCreated = false;
+  int totalKeyRules = 0;
 
   @override
   void initState() {
     controller = TabController(length: 2, vsync: this);
+    if (widget.isEdit) {
+      isObjectCreated = true;
+    }
+    controller.addListener(() {
+      if (controller.index == 1 && !isObjectCreated) {
+        controller.index = 0;
+        showToast("First Create Objective");
+      }
+    });
+
     // controller.addListener(() {
     //   setState(() {});
     // });
@@ -44,9 +57,15 @@ class _CreateObjectiveState extends State<CreateObjective>
     super.initState();
   }
 
+  String get keyRuleCount {
+    if (!widget.isEdit) return "0";
+    return objectivemodel?.otherKeyResults.length.toString() ?? "";
+  }
+
   @override
   Widget build(BuildContext context) {
-    objectivemodel = useProvider(objectiveprovider).currentObejctive;
+    if (widget.isEdit)
+      objectivemodel = useProvider(objectiveprovider).currentObejctive;
     /*context
         .read(objectiveprovider)
         .viewobjective(objectivemodel!.id.toString());*/
@@ -85,7 +104,7 @@ class _CreateObjectiveState extends State<CreateObjective>
                             child: Padding(
                               padding: const EdgeInsets.all(4.0),
                               child: Text(
-                                "3",
+                                keyRuleCount,
                                 style: TextStyle(color: Colors.white),
                               ),
                             ),
@@ -101,24 +120,31 @@ class _CreateObjectiveState extends State<CreateObjective>
                 ),
               ),
               Expanded(
-                child: TabBarView(controller: controller, children: [
-                  PrimaryDetails(
-                    isEdit: widget.isEdit,
-                  ),
-                  KeyRulesScreen(
-                    isEdit: widget.isEdit,
-                  )
-                ]),
+                child: TabBarView(
+                    physics: NeverScrollableScrollPhysics(),
+                    controller: controller,
+                    children: [
+                      PrimaryDetails(
+                        isEdit: widget.isEdit,
+                        onObjectCreated: () {
+                          isObjectCreated = true;
+                          setState(() {});
+                        },
+                      ),
+                      KeyRulesScreen(
+                        isEdit: widget.isEdit,
+                      )
+                    ]),
               ),
-              CommonButton(
-                label: "Save",
-                isExpanded: true,
-                radius: 0,
-                onTap: () {
-                  // context.read(objectiveprovider).createobjective("2", co, duedate, description)
-                  Navigator.maybePop(context);
-                },
-              ),
+              // CommonButton(
+              //   label: "Save",
+              //   isExpanded: true,
+              //   radius: 0,
+              //   onTap: () {
+              //     // context.read(objectiveprovider).createobjective("2", co, duedate, description)
+              //     Navigator.maybePop(context);
+              //   },
+              // ),
             ],
           ),
         ),
@@ -165,8 +191,10 @@ class _CreateObjectiveState extends State<CreateObjective>
 
 class PrimaryDetails extends StatefulHookWidget {
   final bool isEdit;
+  final Function? onObjectCreated;
 
-  PrimaryDetails({this.isEdit = false, Key? key}) : super(key: key);
+  PrimaryDetails({this.isEdit = false, this.onObjectCreated, Key? key})
+      : super(key: key);
 
   @override
   _PrimaryDetailsState createState() => _PrimaryDetailsState();
@@ -176,11 +204,12 @@ class _PrimaryDetailsState extends State<PrimaryDetails> {
   List<MemberModel> members = [];
   dynamic currentObjectType = 1;
   dynamic currentAssignedMembder = 1;
-  List<String> listOFSelectedItem = [];
+  List<int> listOFSelectedItem = [];
   String selectedText = "";
   TextEditingController namecontroller = TextEditingController();
   TextEditingController descriptioncontroller = TextEditingController();
   ObjectiveModel? objectivemodel;
+  DateTime? dueDate;
   @override
   void initState() {
     if (widget.isEdit) {
@@ -213,166 +242,224 @@ class _PrimaryDetailsState extends State<PrimaryDetails> {
     }
     final theme = Theme.of(context).textTheme;
     final lableStyle = theme.subtitle2!.copyWith(fontSize: 16);
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 18),
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(
-              height: 10,
-            ),
-            Text(
-              "Objective type",
-              style: lableStyle,
-            ),
-            const SizedBox(
-              height: 5,
-            ),
-            CustomDropDownButton(
-              currentValue: currentObjectType,
-              items: [
-                DropdownMenuItem(
-                  child: Text("Team"),
-                  value: 1,
-                ),
-                DropdownMenuItem(
-                  child: Text("Individual"),
-                  value: 2,
-                ),
-              ],
-              radius: 10,
-              onChanged: (v) {
-                currentObjectType = v;
-                setState(() {});
-              },
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Text(
-              "User",
-              style: lableStyle,
-            ),
-            const SizedBox(
-              height: 5,
-            ),
-            CustomDropDownButton(
-              currentValue: currentAssignedMembder,
-              items: members
-                  .map((e) => DropdownMenuItem(
-                        child: Text(e.name),
-                        value: e.id,
-                      ))
-                  .toList(),
-              // items: [
-              //   DropdownMenuItem(
-              //     child: Text("Admin"),
-              //     value: 1,
-              //   ),
-              //   DropdownMenuItem(
-              //     child: Text("developer"),
-              //     value: 2,
-              //   ),
-              // ],
-
-              radius: 10,
-              onChanged: (v) {
-                currentAssignedMembder = v;
-                setState(() {});
-              },
-            ),
-            Container(
-              margin: EdgeInsets.only(top: 10.0),
-              decoration:
-                  BoxDecoration(border: Border.all(color: Colors.white)),
-              child: ExpansionTile(
-                title: Text(
-                  listOFSelectedItem.isEmpty ? "Select" : listOFSelectedItem[0],
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.w400,
-                    fontSize: 15.0,
+    return Column(
+      children: [
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 18),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(
+                    height: 10,
                   ),
-                ),
-                children: <Widget>[
-                  new ListView.builder(
-                    physics: NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: _objectiveNotifier.currentteammodel.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Container(
-                        margin: EdgeInsets.only(bottom: 8.0),
-                        child: _ViewItem(
-                            item: _objectiveNotifier.currentteammodel[index],
-                            selected: (val) {
-                              selectedText = val;
-                              if (listOFSelectedItem.contains(val)) {
-                                listOFSelectedItem.remove(val);
-                              } else {
-                                listOFSelectedItem.add(val);
-                              }
-                              // widget.selectedList(listOFSelectedItem);
-                              setState(() {});
-                            },
-                            itemSelected: listOFSelectedItem.contains(
-                                _objectiveNotifier
-                                    .currentteammodel[index].name)),
-                      );
+                  Text(
+                    "Objective type",
+                    style: lableStyle,
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  CustomDropDownButton(
+                    currentValue: currentObjectType,
+                    items: [
+                      DropdownMenuItem(
+                        child: Text("Team"),
+                        value: 1,
+                      ),
+                      DropdownMenuItem(
+                        child: Text("Individual"),
+                        value: 2,
+                      ),
+                    ],
+                    radius: 10,
+                    onChanged: (v) {
+                      currentObjectType = v;
+                      setState(() {});
                     },
                   ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    "User",
+                    style: lableStyle,
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  currentObjectType == 2
+                      ? CustomDropDownButton(
+                          currentValue: currentAssignedMembder,
+                          items: members
+                              .map((e) => DropdownMenuItem(
+                                    child: Text(e.name),
+                                    value: e.id,
+                                  ))
+                              .toList(),
+                          // items: [
+                          //   DropdownMenuItem(
+                          //     child: Text("Admin"),
+                          //     value: 1,
+                          //   ),
+                          //   DropdownMenuItem(
+                          //     child: Text("developer"),
+                          //     value: 2,
+                          //   ),
+                          // ],
+
+                          radius: 10,
+                          onChanged: (v) {
+                            currentAssignedMembder = v;
+                            listOFSelectedItem = [currentAssignedMembder];
+
+                            setState(() {});
+                          },
+                        )
+                      : Container(
+                          // margin: EdgeInsets.only(top: 10.0),
+                          decoration: BoxDecoration(
+                              border: Border.all(color: Colors.white),
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10)),
+                          child: ExpansionTile(
+                            title: Text(
+                              listOFSelectedItem.isEmpty
+                                  ? "Select"
+                                  : listOFSelectedItem.map((e) {
+                                      return members
+                                          .firstWhere(
+                                              (element) => element.id == e)
+                                          .name;
+                                    }).join(', '),
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w400,
+                                fontSize: 15.0,
+                              ),
+                            ),
+                            children: <Widget>[
+                              new ListView.builder(
+                                physics: NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                itemCount: members.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return Container(
+                                    margin: EdgeInsets.only(bottom: 8.0),
+                                    child: _ViewItem(
+                                        item: members[index],
+                                        selected: (val) {
+                                          selectedText = val.toString();
+                                          if (listOFSelectedItem
+                                              .contains(val)) {
+                                            listOFSelectedItem.remove(val);
+                                          } else {
+                                            listOFSelectedItem.add(val);
+                                          }
+                                          // widget.selectedList(listOFSelectedItem);
+                                          setState(() {});
+                                        },
+                                        itemSelected: listOFSelectedItem
+                                            .contains(_objectiveNotifier
+                                                .currentteammodel[index].id)),
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    "Name",
+                    style: lableStyle,
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  EditField(
+                    hint: "Name",
+                    radius: 10,
+                    controller: namecontroller,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    "Description",
+                    style: lableStyle,
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  EditField(
+                    hint: "Description",
+                    radius: 10,
+                    controller: descriptioncontroller,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    "Due Date",
+                    style: lableStyle,
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  CustomDatePicker(
+                    radius: 10,
+                    date: widget.isEdit
+                        ? formter(objectivemodel!.dueDate)
+                        : DateTime.now(),
+                    onDateChange: (d) {
+                      dueDate = d;
+                    },
+                  ),
+                  SizedBox(
+                    height: 50,
+                  ),
+                  // CommonButton(
+                  //   label: "Save",
+                  //   isExpanded: true,
+                  //   radius: 0,
+                  //   onTap: () {
+                  //     // context.read(objectiveprovider).createobjective("2", co, duedate, description)
+                  //     Navigator.maybePop(context);
+                  //   },
+                  // ),
                 ],
               ),
             ),
-            const SizedBox(
-              height: 10,
-            ),
-            Text(
-              "Name",
-              style: lableStyle,
-            ),
-            const SizedBox(
-              height: 5,
-            ),
-            EditField(
-              hint: "Name",
-              radius: 10,
-              controller: namecontroller,
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Text(
-              "Description",
-              style: lableStyle,
-            ),
-            const SizedBox(
-              height: 5,
-            ),
-            EditField(
-              hint: "Description",
-              radius: 10,
-              controller: descriptioncontroller,
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Text(
-              "Due Date",
-              style: lableStyle,
-            ),
-            const SizedBox(
-              height: 5,
-            ),
-            CustomDatePicker(
-              radius: 10,
-              date: widget.isEdit
-                  ? formter(objectivemodel!.dueDate)
-                  : DateTime.now(),
-            )
-          ],
+          ),
         ),
-      ),
+        CommonButton(
+          label: "Save",
+          isExpanded: true,
+          radius: 0,
+          onTap: () {
+            if (listOFSelectedItem.isEmpty) {
+              showToast("Select User");
+              return;
+            }
+            if (namecontroller.text.length == 0) {
+              showToast("Please Enter Name");
+              return;
+            }
+            final res = context.read(objectiveprovider).createobjective(
+                namecontroller.text,
+                dueDate.toString(),
+                descriptioncontroller.text,
+                listOFSelectedItem);
+            if (widget.onObjectCreated != null) {
+              widget.onObjectCreated!();
+            }
+            // Navigator.maybePop(context);
+          },
+        ),
+      ],
     );
   }
 
@@ -383,9 +470,9 @@ class _PrimaryDetailsState extends State<PrimaryDetails> {
 }
 
 class _ViewItem extends StatelessWidget {
-  Currentteam item;
+  MemberModel item;
   bool itemSelected;
-  final Function(String) selected;
+  final Function(int) selected;
 
   _ViewItem(
       {required this.item, required this.itemSelected, required this.selected});
@@ -404,7 +491,7 @@ class _ViewItem extends StatelessWidget {
             child: Checkbox(
               value: itemSelected,
               onChanged: (val) {
-                selected(item.name);
+                selected(item.id);
               },
               activeColor: primaryColor,
             ),

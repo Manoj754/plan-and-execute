@@ -1,8 +1,10 @@
-
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:plan_execute/data/models/currentteam_model.dart';
 import 'package:plan_execute/data/models/error_model.dart';
 import 'package:plan_execute/data/models/objectivemodel.dart';
+import 'package:plan_execute/data/models/user_model.dart';
 import 'package:plan_execute/data/providers/base_notifier.dart';
+import 'package:plan_execute/data/providers/providers.dart';
 
 class ObjectiveNotifier extends BaseNotifier {
   int selectedStatus = 0;
@@ -11,10 +13,11 @@ class ObjectiveNotifier extends BaseNotifier {
   OtherKeyResults? currentkeyresult;
   List<ObjectiveModel> objectivemodel = [];
   List<Currentteam> currentteammodel = [];
-
+  UserData? user;
   ObjectiveModel? model;
 
-  ObjectiveNotifier() {
+  ObjectiveNotifier(ProviderReference reference) {
+    user = reference.read(authProvider).userData;
     load();
     currentteam();
   }
@@ -48,7 +51,6 @@ class ObjectiveNotifier extends BaseNotifier {
       print(response.toString());
       notifyListeners();
     }
-
   }
 
   updatekeyrule(String keyid, String completed, String content) async {
@@ -57,15 +59,21 @@ class ObjectiveNotifier extends BaseNotifier {
       print(response.toString());
       notifyListeners();
     }
-
   }
 
-  createobjective(
-      String userid, String name, String duedate, String description) async {
-    final response = await apiProvider
-        .createobjective(userid, name, duedate, description, {});
+  createobjective(String name, String duedate, String description,
+      List<int> allowedUsers) async {
+    final response = await apiProvider.createobjective(
+        user!.id.toString(), name, duedate, description, allowedUsers);
     if (!(response is ResponseError)) {
       print(response.toString());
+      // objectivemodel.add(ObjectiveModel.fromJson(response));
+      final res = await apiProvider.viewobjective(response['id'].toString());
+      if (!(res is ResponseError)) {
+        print(res.toString());
+        objectivemodel.add(ObjectiveModel.fromJson(res));
+        notifyListeners();
+      }
 
       notifyListeners();
     }
