@@ -46,10 +46,10 @@ class AuthNotifier extends BaseNotifier {
     }
   }
 
-  updateprofile(String name,String email) async {
+  updateprofile(String name, String email) async {
     final response = await apiProvider.updateprofiles(email, name);
     if (!(response is ResponseError)) {
-     showToast(response.toString());
+      showToast(response.toString());
     }
   }
 
@@ -60,6 +60,7 @@ class AuthNotifier extends BaseNotifier {
     if (resposne == true) {
       return true;
     } else if (resposne is ResponseError) {
+      
       showToast(resposne.message);
     }
   }
