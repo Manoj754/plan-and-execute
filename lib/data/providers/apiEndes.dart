@@ -14,3 +14,5 @@ const String currentTeamMember = "/current-team-members";
 const String viewobjectiv = "/objective";
 const String deleteobjectiv = "/delete-objective";
 const String currentteam = "/current-team-members";
+const String me = "/me";
+const String update_profile = "/update-profile";

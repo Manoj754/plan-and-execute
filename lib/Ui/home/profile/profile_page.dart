@@ -1,16 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:plan_execute/data/models/profile.dart';
+import 'package:plan_execute/data/models/user_model.dart';
 import 'package:plan_execute/data/providers/providers.dart';
 import 'package:plan_execute/routes/routes.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class ProfilePage extends StatefulWidget {
+class ProfilePage extends StatefulHookWidget {
   @override
   _ProfilePageState createState() => _ProfilePageState();
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  UserData? profile;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+   /* profile = context.read(authProvider).Userprofile();
+    print(profile.toString());*/
+    super.initState();
+
+  }
   @override
   Widget build(BuildContext context) {
+    final profile = useProvider(authProvider).userData;
     final size = MediaQuery.of(context).size;
     return Container(
       margin: EdgeInsets.only(left: 15, right: 15),
@@ -40,7 +54,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           borderRadius: BorderRadius.circular(10),
                           image: DecorationImage(
                             image: NetworkImage(
-                                "https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png"),
+                                profile!.profilePhotoUrl),
                           ),
                           color: Colors.grey[300]),
                     ),
@@ -64,7 +78,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Domnic.lakra",
+                       profile.name,
                       ),
                       SizedBox(
                         height: 5,

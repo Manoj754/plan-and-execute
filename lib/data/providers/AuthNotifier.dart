@@ -11,6 +11,7 @@ import 'package:plan_execute/data/providers/sp_helper.dart';
 
 class AuthNotifier extends BaseNotifier {
   UserData? userData;
+
   AuthNotifier() {
     final stringData = SpHelper.getString(pref_user_data);
     print(stringData);
@@ -18,7 +19,9 @@ class AuthNotifier extends BaseNotifier {
       userData = UserData.fromJson(jsonDecode(stringData));
     }
   }
+
   ApiProvider _apiProvider = ApiProvider();
+
   Future login(String email, String password, bool isRemmberme) async {
     print("login");
     final response = await _apiProvider.login(email, password);
@@ -31,6 +34,23 @@ class AuthNotifier extends BaseNotifier {
       showToast(response.message);
     }
     notifyListeners();
+  }
+
+  Userprofile() async {
+    final response = await apiProvider.userprofile();
+    if (response is UserData) {
+      userData = response;
+    }
+    if (response is ResponseError) {
+      showToast(response.message);
+    }
+  }
+
+  updateprofile(String name,String email) async {
+    final response = await apiProvider.updateprofiles(email, name);
+    if (!(response is ResponseError)) {
+     showToast(response.toString());
+    }
   }
 
   Future register(
